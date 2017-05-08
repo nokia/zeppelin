@@ -111,9 +111,9 @@ public class RemoteInterpreterServer
     // server.stop() does not always finish server.serve() loop
     // sometimes server.serve() is hanging even after server.stop() call.
     // this case, need to force kill the process
+    long deadline = System.currentTimeMillis() + DEFAULT_SHUTDOWN_TIMEOUT;
 
-    long startTime = System.currentTimeMillis();
-    while (System.currentTimeMillis() - startTime < DEFAULT_SHUTDOWN_TIMEOUT &&
+    while (System.currentTimeMillis() < deadline &&
         server.isServing()) {
       try {
         Thread.sleep(300);

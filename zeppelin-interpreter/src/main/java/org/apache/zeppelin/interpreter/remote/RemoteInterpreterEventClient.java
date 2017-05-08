@@ -35,6 +35,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Thread connection ZeppelinServer -> RemoteInterpreterServer does not provide
@@ -47,7 +49,8 @@ import java.util.Map;
  */
 public class RemoteInterpreterEventClient implements ResourcePoolConnector {
   private final Logger logger = LoggerFactory.getLogger(RemoteInterpreterEventClient.class);
-  private final List<RemoteInterpreterEvent> eventQueue = new LinkedList<>();
+  private final LinkedBlockingQueue<RemoteInterpreterEvent> eventQueue =
+    new LinkedBlockingQueue<>();
   private final List<ResourceSet> getAllResourceResponse = new LinkedList<>();
   private final Map<ResourceId, Object> getResourceResponse = new HashMap<>();
   private final Map<InvokeResourceMethodEventMessage, Object> getInvokeResponse = new HashMap<>();
@@ -356,21 +359,12 @@ public class RemoteInterpreterEventClient implements ResourcePoolConnector {
    * @return next available event
    */
   public RemoteInterpreterEvent pollEvent() {
-    synchronized (eventQueue) {
-      if (eventQueue.isEmpty()) {
-        try {
-          eventQueue.wait(1000);
-        } catch (InterruptedException e) {
-        }
-      }
-
-      if (eventQueue.isEmpty()) {
-        return new RemoteInterpreterEvent(RemoteInterpreterEventType.NO_OP, "");
-      } else {
-        RemoteInterpreterEvent event = eventQueue.remove(0);
-        logger.debug("Send event {}", event.getType());
-        return event;
-      }
+    try {
+      RemoteInterpreterEvent event = eventQueue.poll(1000, TimeUnit.MILLISECONDS);
+      logger.debug("Send event {}", event.getType());
+      return event;
+    } catch (InterruptedException e) {
+      return new RemoteInterpreterEvent(RemoteInterpreterEventType.NO_OP, "");
     }
   }
 
@@ -415,10 +409,11 @@ public class RemoteInterpreterEventClient implements ResourcePoolConnector {
   }
 
   private void sendEvent(RemoteInterpreterEvent event) {
-    logger.debug("Send Event: " + event);
-    synchronized (eventQueue) {
-      eventQueue.add(event);
-      eventQueue.notifyAll();
+    try {
+      eventQueue.put(event);
+      logger.debug("Send Event: " + event);
+    } catch (InterruptedException e) {
+      logger.error("Unable to offer on queue: " + event);
     }
   }
 
@@ -477,18 +472,18 @@ public class RemoteInterpreterEventClient implements ResourcePoolConnector {
   /**
    * Wait for eventQueue becomes empty
    */
-  public void waitForEventQueueBecomesEmpty(long atMost) {
-    long startTime = System.currentTimeMillis();
-    synchronized (eventQueue) {
-      while (!eventQueue.isEmpty() && (System.currentTimeMillis() - startTime) < atMost) {
-        try {
-          eventQueue.wait(100);
-        } catch (InterruptedException e) {
-          // ignore exception
-        }
+  public void waitForEventQueueBecomesEmpty(long atMostMilliseconds) {
+    long deadline = System.currentTimeMillis() + atMostMilliseconds;
+
+    while (System.currentTimeMillis() < deadline &&
+        !eventQueue.isEmpty()) {
+      try {
+        Thread.sleep(100);
+      } catch (InterruptedException e) {
+        // ignore exception
       }
-      if (!eventQueue.isEmpty())
-        eventQueue.clear();
     }
+    if (!eventQueue.isEmpty())
+      eventQueue.clear();
   }
 }
