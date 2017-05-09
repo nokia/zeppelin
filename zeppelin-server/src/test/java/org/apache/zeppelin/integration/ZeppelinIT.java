@@ -291,7 +291,7 @@ public class ZeppelinIT extends AbstractZeppelinIT {
 
       // Create 1st paragraph
       setTextOfParagraph(1,
-              "%angular <div id=\\'angularRunParagraph\\'>Run second paragraph</div>");
+              "%angular <div id=\"angularRunParagraph\">Run second paragraph</div>");
       runParagraph(1);
       waitForParagraph(1, "FINISHED");
       waitForText("Run second paragraph", By.xpath(
@@ -311,9 +311,9 @@ public class ZeppelinIT extends AbstractZeppelinIT {
 
       // Update first paragraph to call z.runParagraph() with 2nd paragraph id
       setTextOfParagraph(1,
-              "%angular <div id=\\'angularRunParagraph\\' ng-click=\\'z.runParagraph(\""
+              "%angular <div id=\"angularRunParagraph\" ng-click=\"z.runParagraph(\\'"
                       + secondParagraphId.trim()
-                      + "\")\\'>Run second paragraph</div>");
+                      + "\\')\">Run second paragraph</div>");
       runParagraph(1);
       waitForParagraph(1, "FINISHED");
 
