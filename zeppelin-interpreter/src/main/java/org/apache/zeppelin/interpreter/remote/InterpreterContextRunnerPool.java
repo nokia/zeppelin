@@ -17,8 +17,8 @@
 
 package org.apache.zeppelin.interpreter.remote;
 
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.List;
 import java.util.Map;
 
@@ -32,57 +32,59 @@ import org.slf4j.LoggerFactory;
  */
 public class InterpreterContextRunnerPool {
   Logger logger = LoggerFactory.getLogger(InterpreterContextRunnerPool.class);
-  private Map<String, List<InterpreterContextRunner>> interpreterContextRunners;
+  private ConcurrentHashMap<String, ConcurrentSkipListSet<InterpreterContextRunner>>
+  interpreterContextRunners;
 
   public InterpreterContextRunnerPool() {
-    interpreterContextRunners = new HashMap<>();
+    interpreterContextRunners = new ConcurrentHashMap<>();
 
   }
 
   // add runner
-  public void add(String noteId, InterpreterContextRunner runner) {
-    synchronized (interpreterContextRunners) {
-      if (!interpreterContextRunners.containsKey(noteId)) {
-        interpreterContextRunners.put(noteId, new LinkedList<InterpreterContextRunner>());
-      }
+  public synchronized void add(String noteId, InterpreterContextRunner runner) {
+    ConcurrentSkipListSet<InterpreterContextRunner> initial =
+      new ConcurrentSkipListSet<InterpreterContextRunner>();
 
+    initial.add(runner);
+
+    ConcurrentSkipListSet<InterpreterContextRunner> tryPut =
+      interpreterContextRunners.putIfAbsent(noteId, initial);
+
+    if (tryPut == null)
       interpreterContextRunners.get(noteId).add(runner);
-    }
   }
 
   // replace all runners to noteId
-  public void addAll(String noteId, List<InterpreterContextRunner> runners) {
-    synchronized (interpreterContextRunners) {
-      if (!interpreterContextRunners.containsKey(noteId)) {
-        interpreterContextRunners.put(noteId, new LinkedList<InterpreterContextRunner>());
-      }
+  public synchronized void addAll(String noteId, List<InterpreterContextRunner> runners) {
+    ConcurrentSkipListSet<InterpreterContextRunner> tryPut =
+      interpreterContextRunners.putIfAbsent(
+        noteId,
+        new ConcurrentSkipListSet<InterpreterContextRunner>(runners)
+      );
 
+    if (tryPut == null)
       interpreterContextRunners.get(noteId).addAll(runners);
-    }
   }
 
-  public void clear(String noteId) {
-    synchronized (interpreterContextRunners) {
-      interpreterContextRunners.remove(noteId);
-    }
+  public synchronized void clear(String noteId) {
+    interpreterContextRunners.remove(noteId);
   }
 
 
   public void run(String noteId, String paragraphId) {
-    synchronized (interpreterContextRunners) {
-      List<InterpreterContextRunner> list = interpreterContextRunners.get(noteId);
-      if (list != null) {
-        for (InterpreterContextRunner r : list) {
-          if (noteId.equals(r.getNoteId()) && paragraphId.equals(r.getParagraphId())) {
-            logger.info("run paragraph {} on note {} from InterpreterContext",
-                r.getParagraphId(), r.getNoteId());
-            r.run();
-            return;
-          }
+    ConcurrentSkipListSet<InterpreterContextRunner> list =
+      interpreterContextRunners.get(noteId);
+    if (list != null) {
+      for (InterpreterContextRunner r : list) {
+        if (noteId.equals(r.getNoteId()) && paragraphId.equals(r.getParagraphId())) {
+          logger.info("run paragraph {} on note {} from InterpreterContext",
+              r.getParagraphId(), r.getNoteId());
+          r.run();
+          return;
         }
       }
-
-      throw new InterpreterException("Can not run paragraph " + paragraphId + " on " + noteId);
     }
+
+    throw new InterpreterException("Can not run paragraph " + paragraphId + " on " + noteId);
   }
 }

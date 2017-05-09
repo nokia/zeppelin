@@ -17,8 +17,7 @@
 
 package org.apache.zeppelin.interpreter.remote;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.pool2.BasePooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
@@ -37,7 +36,7 @@ import org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService.Client;
 public class ClientFactory extends BasePooledObjectFactory<Client>{
   private String host;
   private int port;
-  Map<Client, TSocket> clientSocketMap = new HashMap<>();
+  ConcurrentHashMap<Client, TSocket> clientSocketMap = new ConcurrentHashMap<>();
 
   public ClientFactory(String host, int port) {
     this.host = host;
@@ -56,9 +55,8 @@ public class ClientFactory extends BasePooledObjectFactory<Client>{
     TProtocol protocol = new  TBinaryProtocol(transport);
     Client client = new RemoteInterpreterService.Client(protocol);
 
-    synchronized (clientSocketMap) {
-      clientSocketMap.put(client, transport);
-    }
+    clientSocketMap.put(client, transport);
+
     return client;
   }
 
@@ -69,12 +67,8 @@ public class ClientFactory extends BasePooledObjectFactory<Client>{
 
   @Override
   public void destroyObject(PooledObject<Client> p) {
-    synchronized (clientSocketMap) {
-      if (clientSocketMap.containsKey(p.getObject())) {
-        clientSocketMap.get(p.getObject()).close();
-        clientSocketMap.remove(p.getObject());
-      }
-    }
+    TSocket socket = clientSocketMap.remove(p.getObject());
+    if (socket != null) socket.close();
   }
 
   @Override

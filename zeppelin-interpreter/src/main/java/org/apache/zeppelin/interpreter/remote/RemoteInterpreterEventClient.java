@@ -51,7 +51,8 @@ public class RemoteInterpreterEventClient implements ResourcePoolConnector {
   private final Logger logger = LoggerFactory.getLogger(RemoteInterpreterEventClient.class);
   private final LinkedBlockingQueue<RemoteInterpreterEvent> eventQueue =
     new LinkedBlockingQueue<>();
-  private final List<ResourceSet> getAllResourceResponse = new LinkedList<>();
+  private final LinkedBlockingQueue<ResourceSet> getAllResourceResponse =
+    new LinkedBlockingQueue<>();
   private final Map<ResourceId, Object> getResourceResponse = new HashMap<>();
   private final Map<InvokeResourceMethodEventMessage, Object> getInvokeResponse = new HashMap<>();
   private final Gson gson = new Gson();
@@ -122,16 +123,11 @@ public class RemoteInterpreterEventClient implements ResourcePoolConnector {
     // request
     sendEvent(new RemoteInterpreterEvent(RemoteInterpreterEventType.RESOURCE_POOL_GET_ALL, null));
 
-    synchronized (getAllResourceResponse) {
-      while (getAllResourceResponse.isEmpty()) {
-        try {
-          getAllResourceResponse.wait();
-        } catch (InterruptedException e) {
-          logger.warn(e.getMessage(), e);
-        }
-      }
-      ResourceSet resourceSet = getAllResourceResponse.remove(0);
-      return resourceSet;
+    try {
+      return getAllResourceResponse.poll(10000, TimeUnit.MILLISECONDS);
+    } catch (InterruptedException e) {
+      logger.error(e.getMessage(), e);
+      return null;
     }
   }
 
@@ -287,10 +283,7 @@ public class RemoteInterpreterEventClient implements ResourcePoolConnector {
       resourceSet.add(resource);
     }
 
-    synchronized (getAllResourceResponse) {
-      getAllResourceResponse.add(resourceSet);
-      getAllResourceResponse.notify();
-    }
+    getAllResourceResponse.add(resourceSet);
   }
 
   /**
