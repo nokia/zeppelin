@@ -91,7 +91,7 @@ public class SecurityUtils {
     String principal;
     if (subject.isAuthenticated()) {
       Object principalObj = subject.getPrincipal();
-      if(principalObj instanceof Principal) {
+      if (principalObj instanceof Principal) {
         principal = ((Principal) principalObj).getName();
       } else {
         principal = String.valueOf(principalObj);
