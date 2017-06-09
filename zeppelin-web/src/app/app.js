@@ -167,12 +167,6 @@ function auth () {
   return $http.get(baseUrlSrv.getRestApiBase() + '/security/ticket', config).then(function (response) {
     zeppelinWebApp.run(function ($rootScope) {
       $rootScope.ticket = angular.fromJson(response.data).body
-
-      $rootScope.ticket.screenUsername = $rootScope.ticket.principal
-      if ($rootScope.ticket.principal.startsWith("#Pac4j")) {
-        let re = ", name=(.*?),"
-        $rootScope.ticket.screenUsername = $rootScope.ticket.principal.match(re)[1]
-      }
     })
   }, function (errorResponse) {
     // Handle error case
