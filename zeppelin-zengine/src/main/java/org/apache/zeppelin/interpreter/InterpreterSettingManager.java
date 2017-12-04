@@ -212,15 +212,8 @@ public class InterpreterSettingManager {
           Map<String, InterpreterProperty> mergedProperties =
               new HashMap<>(InterpreterSetting.convertInterpreterProperties(
                   interpreterSettingTemplate.getProperties()));
-          Map<String, InterpreterProperty> savedProperties = InterpreterSetting
-              .convertInterpreterProperties(savedInterpreterSetting.getProperties());
-          for (Map.Entry<String, InterpreterProperty> entry : savedProperties.entrySet()) {
-            // only merge properties whose value is not empty
-            if (entry.getValue().getValue() != null && !
-                StringUtils.isBlank(entry.getValue().toString())) {
-              mergedProperties.put(entry.getKey(), entry.getValue());
-            }
-          }
+          mergedProperties.putAll(InterpreterSetting.convertInterpreterProperties(
+              savedInterpreterSetting.getProperties()));
           savedInterpreterSetting.setProperties(mergedProperties);
           // merge InterpreterInfo
           savedInterpreterSetting.setInterpreterInfos(

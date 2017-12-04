@@ -199,7 +199,7 @@ public class GroovyInterpreter extends Interpreter {
           Thread t = (Thread) object;
           t.dumpStack();
           t.interrupt();
-          //t.stop(); //TODO(dlukyanov): need some way to terminate maybe through GObject..
+          //t.stop(); //TODO: need some way to terminate maybe through GObject..
         } catch (Throwable t) {
           log.error("Failed to cancel script: " + t, t);
         }
