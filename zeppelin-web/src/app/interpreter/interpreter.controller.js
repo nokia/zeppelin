@@ -172,7 +172,11 @@ function InterpreterCtrl($rootScope, $scope, $http, baseUrlSrv, ngToast, $timeou
   }
 
   let emptyNewProperty = function(object) {
-    angular.extend(object, {propertyValue: '', propertyKey: '', propertyType: $scope.interpreterPropertyTypes[0]})
+    angular.extend(object, {
+      propertyValue: '',
+      propertyKey: '',
+      propertyType: $scope.interpreterPropertyTypes[0]
+    })
   }
 
   let emptyNewDependency = function (object) {
@@ -529,6 +533,7 @@ function InterpreterCtrl($rootScope, $scope, $http, baseUrlSrv, ngToast, $timeou
       newProperties[p] = {
         value: newSetting.properties[p].value,
         type: newSetting.properties[p].type,
+        readonly: newSetting.properties[p].readonly,
         name: p
       }
     }
@@ -614,10 +619,10 @@ function InterpreterCtrl($rootScope, $scope, $http, baseUrlSrv, ngToast, $timeou
       if (!setting.propertyKey || setting.propertyKey === '') {
         return
       }
-
-      setting.properties[setting.propertyKey] =
-        {value: setting.propertyValue, type: setting.propertyType}
-
+      setting.properties[setting.propertyKey] = {
+        value: setting.propertyValue,
+        type: setting.propertyType
+      }
       emptyNewProperty(setting)
     }
   }

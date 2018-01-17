@@ -404,28 +404,40 @@ limitations under the License.
             <td style="vertical-align: middle;">{{key}}</td>
             <td style="vertical-align: middle;">
               <span ng-if="setting.properties[key].type === 'textarea'"
-                    editable-textarea="setting.properties[key].value" e-form="valueform" e-msd-elastic>
+                    e-ng-readonly="setting.properties[key].readonly"
+                    editable-textarea="setting.properties[key].value"
+                    e-form="valueform" e-msd-elastic>
                  {{setting.properties[key].value | breakFilter}}
               </span>
               <span ng-if="setting.properties[key].type === 'string'"
-                    editable-text="setting.properties[key].value" e-form="valueform" e-msd-elastic>
-                {{setting.properties[key].value}}
+                    e-ng-readonly="setting.properties[key].readonly"
+                    editable-text="setting.properties[key].value"
+                    e-form="valueform" e-msd-elastic>
+                 {{setting.properties[key].value}}
               </span>
               <span ng-if="setting.properties[key].type === 'number'"
-                    editable-text="setting.properties[key].value" e-widget-number e-form="valueform" e-msd-elastic>
-                {{setting.properties[key].value}}
+                    e-ng-readonly="setting.properties[key].readonly"
+                    editable-text="setting.properties[key].value"
+                    e-widget-number e-form="valueform" e-msd-elastic>
+                 {{setting.properties[key].value}}
               </span>
               <span ng-if="setting.properties[key].type === 'url'"
-                    editable-text="setting.properties[key].value" e-form="valueform" e-msd-elastic>
+                    e-ng-readonly="setting.properties[key].readonly"
+                    editable-text="setting.properties[key].value"
+                    e-form="valueform" e-msd-elastic>
                 <a ng-href="{{setting.properties[key].value}}">{{setting.properties[key].value}}</a>
               </span>
               <span ng-if="setting.properties[key].type === 'password'"
-                    editable-password="setting.properties[key].value" e-form="valueform" e-msd-elastic>
-                {{setting.properties[key].value ? '***' : ''}}
+                    e-ng-readonly="setting.properties[key].readonly"
+                    editable-password="setting.properties[key].value"
+                    e-form="valueform" e-msd-elastic>
+                 {{setting.properties[key].value ? '***' : ''}}
               </span>
               <span ng-if="setting.properties[key].type === 'checkbox'"
-                    editable-checkbox="setting.properties[key].value" e-form="valueform" e-msd-elastic>
-                {{setting.properties[key].value}}
+                    e-ng-readonly="setting.properties[key].readonly"
+                    editable-checkbox="setting.properties[key].value"
+                    e-form="valueform" e-msd-elastic>
+                 {{setting.properties[key].value}}
               </span>
             </td>
             <td style="vertical-align: middle;" ng-if="valueform.$visible">
