@@ -89,76 +89,67 @@ function NavCtrl ($scope, $rootScope, $http, $routeParams, $location,
   function logout() {
     let logoutURL = baseUrlSrv.getRestApiBase() + '/login/logout'
 
-    $http.post(logoutURL).then(function () {}, function (response) {
-      if (response.data) {
-        let res = angular.fromJson(response.data).body
-        if (res['redirectURL']) {
-          window.location.href = res['redirectURL'] + window.location.href
-        }
+    // force authcBasic (if configured) to logout
+    if (detectIE()) {
+      let outcome
+      try {
+        outcome = document.execCommand('ClearAuthenticationCache')
+      } catch (e) {
+        console.log(e)
       }
-
-      // force authcBasic (if configured) to logout
-      if (detectIE()) {
-        let outcome
-        try {
-          outcome = document.execCommand('ClearAuthenticationCache')
-        } catch (e) {
-          console.log(e)
-        }
-        if (!outcome) {
-          // Let's create an xmlhttp object
-          outcome = (function (x) {
-            if (x) {
-              // the reason we use "random" value for password is
-              // that browsers cache requests. changing
-              // password effectively behaves like cache-busing.
-              x.open('HEAD', location.href, true, 'logout',
-                (new Date()).getTime().toString())
-              x.send('')
-              // x.abort()
-              return 1 // this is **speculative** "We are done."
-            } else {
-              // eslint-disable-next-line no-useless-return
-              return
-            }
-          })(window.XMLHttpRequest ? new window.XMLHttpRequest()
-            // eslint-disable-next-line no-undef
-            : (window.ActiveXObject ? new ActiveXObject('Microsoft.XMLHTTP') : u))
-        }
-        if (!outcome) {
-          let m = 'Your browser is too old or too weird to support log out functionality. Close all windows and ' +
-            'restart the browser.'
-          alert(m)
-        }
-      } else {
-        // for firefox and safari
-        logoutURL = logoutURL.replace('//', '//false:false@')
+      if (!outcome) {
+        // Let's create an xmlhttp object
+        outcome = (function (x) {
+          if (x) {
+            // the reason we use "random" value for password is
+            // that browsers cache requests. changing
+            // password effectively behaves like cache-busing.
+            x.open('HEAD', location.href, true, 'logout',
+              (new Date()).getTime().toString())
+            x.send('')
+            // x.abort()
+            return 1 // this is **speculative** "We are done."
+          } else {
+            // eslint-disable-next-line no-useless-return
+            return
+          }
+        })(window.XMLHttpRequest ? new window.XMLHttpRequest()
+          // eslint-disable-next-line no-undef
+          : (window.ActiveXObject ? new ActiveXObject('Microsoft.XMLHTTP') : u))
       }
+      if (!outcome) {
+        let m = 'Your browser is too old or too weird to support log out functionality. Close all windows and ' +
+          'restart the browser.'
+        alert(m)
+      }
+    } else {
+      // for firefox and safari
+      logoutURL = logoutURL.replace('//', '//false:false@')
+    }
 
-      let config = (process.env.PROD) ? {headers: {'X-Requested-With': 'XMLHttpRequest'}} : {}
-      $http.post(logoutURL, config).then(
-        function (response) { },
-        function (errorResponse) {
-          $rootScope.userName = ''
-          $rootScope.ticket.principal = ''
-          $rootScope.ticket.screenUsername = ''
-          $rootScope.ticket.ticket = ''
-          $rootScope.ticket.roles = ''
+    let config = (process.env.PROD) ? {headers: {'X-Requested-With': 'XMLHttpRequest'}} : {}
+    $http.post(logoutURL, config).then(
+      function (response) { },
+      function (errorResponse) {
+        $rootScope.userName = ''
+        $rootScope.ticket.principal = ''
+        $rootScope.ticket.screenUsername = ''
+        $rootScope.ticket.ticket = ''
+        $rootScope.ticket.roles = ''
 
-          BootstrapDialog.show({
-            message: 'Logout Success'
-          })
-          setTimeout(function () {
-            let redirect = errorResponse.headers('Location')
-            if (errorResponse.status === 403 && redirect !== undefined) {
-              // Handle page redirect
-              window.location.href = redirect
-            } else {
-              window.location = baseUrlSrv.getBase()
-            }
-          }, 1000)
+        BootstrapDialog.show({
+          message: 'Logout Success'
         })
-    })
+        setTimeout(function () {
+          let redirect = errorResponse.headers('Location')
+          if (errorResponse.status === 403 && redirect !== undefined) {
+            // Handle page redirect
+            window.location.href = redirect
+          } else {
+            window.location = baseUrlSrv.getBase()
+          }
+        }, 1000)
+      })
   }
 
   function detectIE() {
