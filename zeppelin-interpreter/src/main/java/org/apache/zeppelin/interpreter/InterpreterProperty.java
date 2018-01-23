@@ -18,7 +18,7 @@
 package org.apache.zeppelin.interpreter;
 
 /**
- * Property for instance of interpreter
+ * Interpreter property object (interpreter.json)
  */
 public class InterpreterProperty {
   private String name;

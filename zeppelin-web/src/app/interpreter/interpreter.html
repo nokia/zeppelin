@@ -24,11 +24,6 @@ limitations under the License.
             <i class="fa fa-database" ng-style="{color: showRepositoryInfo ? '#3071A9' : 'black' }"></i>
             Repository
           </button>
-          <button class="btn btn-default btn-sm"
-                  ng-click="showAddNewSetting = !showAddNewSetting">
-            <i class="fa fa-plus"></i>
-            Create
-          </button>
         </div>
       </div>
     </div>
@@ -37,7 +32,6 @@ limitations under the License.
         Manage interpreters settings. You can create / edit / remove settings. Note can bind / unbind these interpreter settings.
       </div>
     </div>
-
     <div class="row">
       <div class="col-md-4">
         <div class="input-group" style="margin-top: 10px">
@@ -51,6 +45,16 @@ limitations under the License.
             </button>
           </span>
         </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <br/>
+        <button class="btn btn-default btn-sm"
+              ng-click="showAddNewSetting = !showAddNewSetting">
+          <i class="fa fa-plus"></i>
+          Create custom interpreter
+        </button>
       </div>
     </div>
   </div>
@@ -129,8 +133,7 @@ limitations under the License.
                   ng-show="setting.group == 'spark'">
             <span class="fa fa-external-link"></span> spark ui</button>
           <button class="btn btn-default btn-xs"
-                  ng-click="valueform.$show();
-                  copyOriginInterpreterSettingProperties(setting.id)">
+                  ng-click="shouldEdit(valueform, setting.id)">
             <span class="fa fa-pencil"></span> edit</button>
           <button class="btn btn-default btn-xs"
                   ng-click="restartInterpreterSetting(setting.id)">
@@ -359,7 +362,7 @@ limitations under the License.
           <span class="input-group" style="line-height:30px;">
             <label>
               <input type="checkbox" style="width:20px !important" id="idShowPermission" ng-click="togglePermissions(setting.name)" ng-model="setting.option.setPermission" ng-disabled="!valueform.$visible"/>
-               Set permission
+               Set permissions
             </label>
           </span>
         </div>
@@ -370,16 +373,27 @@ limitations under the License.
         <!-- permissions -->
         <div ng-show="setting.option.setPermission" class="permissionsForm">
           <div>
-            <p>
-              Enter comma separated users and groups in the fields. <br />
-              Empty field (*) implies anyone can run this interpreter.
+            <p>Enter comma separated users/roles in the fields.<br />
+              Empty field implies no restrictions.
             </p>
             <div>
-
-            <span class="owners">Owners </span>
-            <select id="{{setting.name}}Owners" class="form-control" multiple="multiple" ng-disabled="!valueform.$visible">
-              <option ng-repeat="owner in setting.option.owners" selected="selected">{{owner}}</option>
-            </select>
+              <span class="owners" tooltip-append-to-body="true" tooltip-placement="top-left"
+                    uib-tooltip="Owners can run/read/edit/restart an interpreter setting">
+                Owners:
+              </span>
+              <select id="{{setting.name}}Owners" class="form-control" multiple="multiple" ng-disabled="!valueform.$visible">
+                <option ng-repeat="owner in setting.option.owners" selected="selected">{{owner}}</option>
+              </select>
+            </div>
+            <br/>
+            <div>
+              <span class="readers" tooltip-append-to-body="true" tooltip-placement="top-left"
+                    uib-tooltip="Readers can only run/read/restart an interpreter setting">
+                Readers:
+              </span>
+              <select id="{{setting.name}}Readers" class="form-control" multiple="multiple" ng-disabled="!valueform.$visible">
+                <option ng-repeat="reader in setting.option.readers" selected="selected">{{reader}}</option>
+              </select>
             </div>
           </div>
         </div>

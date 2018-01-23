@@ -238,7 +238,7 @@ limitations under the License.
           <span class="input-group" style="line-height:30px;">
             <label>
               <input type="checkbox" style="width:20px !important" id="idShowPermission" ng-click="togglePermissions('newInterpreter')" ng-model="newInterpreterSetting.option.setPermission"/>
-               Set permission
+               Set permissions
             </label>
           </span>
             </div>
@@ -251,14 +251,25 @@ limitations under the License.
             <!-- permissions -->
             <div ng-show="newInterpreterSetting.option.setPermission" class="permissionsForm">
               <div>
-                <p>
-                  Enter comma separated users and groups in the fields. <br />
-                  Empty field (*) implies anyone can run this interpreter.
+                <p>Enter comma separated users/roles in the fields.<br />
+                  Empty field implies no restrictions.
                 </p>
                 <div>
-                  <span class="owners">Owners </span>
+                  <span class="owners" tooltip-append-to-body="true" tooltip-placement="top-left"
+                        uib-tooltip="Owners can run/read/edit/restart an interpreter setting">
+                    Owners:
+                  </span>
                   <select id="newInterpreterOwners" class="form-control" multiple="multiple">
                     <option ng-repeat="owner in newInterpreterSetting.option.owners" selected="selected">{{owner}}</option>
+                  </select>
+                </div>
+                <div>
+                  <span class="readers" tooltip-append-to-body="true" tooltip-placement="top-left"
+                        uib-tooltip="Readers can only run/read/restart an interpreter setting">
+                    Readers:
+                  </span>
+                  <select id="newInterpreterReaders" class="form-control" multiple="multiple">
+                    <option ng-repeat="reader in newInterpreterSetting.option.readers" selected="selected">{{reader}}</option>
                   </select>
                 </div>
               </div>

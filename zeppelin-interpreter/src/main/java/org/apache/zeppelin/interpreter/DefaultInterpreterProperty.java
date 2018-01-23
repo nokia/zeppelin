@@ -18,7 +18,7 @@
 package org.apache.zeppelin.interpreter;
 
 /**
- * Property for registered interpreter
+ * Registered interpreter property object (interpreter-setting.json)
  */
 public class DefaultInterpreterProperty {
   private String envName;

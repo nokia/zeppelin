@@ -18,9 +18,9 @@
 package org.apache.zeppelin.rest;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.DELETE;
@@ -34,13 +34,12 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.google.common.collect.Sets;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.zeppelin.annotation.ZeppelinApi;
 import org.apache.zeppelin.dep.Repository;
-import org.apache.zeppelin.interpreter.InterpreterException;
-import org.apache.zeppelin.interpreter.InterpreterPropertyType;
-import org.apache.zeppelin.interpreter.InterpreterSetting;
-import org.apache.zeppelin.interpreter.InterpreterSettingManager;
+import org.apache.zeppelin.interpreter.*;
+import org.apache.zeppelin.rest.exception.ForbiddenException;
 import org.apache.zeppelin.rest.message.NewInterpreterSettingRequest;
 import org.apache.zeppelin.rest.message.RestartInterpreterRequest;
 import org.apache.zeppelin.rest.message.UpdateInterpreterSettingRequest;
@@ -61,6 +60,7 @@ public class InterpreterRestApi {
 
   private InterpreterSettingManager interpreterSettingManager;
   private NotebookServer notebookServer;
+  private InterpreterAuthorization interpreterAuthorization;
 
   public InterpreterRestApi() {
   }
@@ -69,6 +69,7 @@ public class InterpreterRestApi {
       NotebookServer notebookWsServer) {
     this.interpreterSettingManager = interpreterSettingManager;
     this.notebookServer = notebookWsServer;
+    this.interpreterAuthorization = new InterpreterAuthorization(interpreterSettingManager);
   }
 
   /**
@@ -90,6 +91,9 @@ public class InterpreterRestApi {
   public Response getSetting(@PathParam("settingId") String settingId) {
     try {
       InterpreterSetting setting = interpreterSettingManager.get(settingId);
+
+      checkIfUserCanRead(settingId, "No permissions to get interpreter setting");
+
       if (setting == null) {
         return new JsonResponse<>(Status.NOT_FOUND).build();
       } else {
@@ -137,6 +141,8 @@ public class InterpreterRestApi {
     logger.info("Update interpreterSetting {}", settingId);
 
     try {
+      checkIfUserCanWrite(settingId, "No permissions to update interpreter setting");
+
       UpdateInterpreterSettingRequest request =
           UpdateInterpreterSettingRequest.fromJson(message);
       interpreterSettingManager
@@ -165,6 +171,7 @@ public class InterpreterRestApi {
   @Path("setting/{settingId}")
   @ZeppelinApi
   public Response removeSetting(@PathParam("settingId") String settingId) throws IOException {
+    checkIfUserCanWrite(settingId, "No permissions to remove interpreter setting");
     logger.info("Remove interpreterSetting {}", settingId);
     interpreterSettingManager.remove(settingId);
     return new JsonResponse(Status.OK).build();
@@ -257,8 +264,13 @@ public class InterpreterRestApi {
     if (interpreterSetting == null) {
       return new JsonResponse<>(Status.NOT_FOUND).build();
     }
-    Map<String, String> infos = interpreterSetting.getInfos();
-    return new JsonResponse<>(Status.OK, "metadata", infos).build();
+    Map<String, String> infosAll = interpreterSetting.getInfos();
+    Set<String> userAndRoles = getUserAndRoles();
+    infosAll.put("canRead", String.valueOf(interpreterAuthorization
+            .hasReadAuthorization(userAndRoles, settingId)));
+    infosAll.put("canWrite", String.valueOf(interpreterAuthorization
+            .hasWriteAuthorization(userAndRoles, settingId)));
+    return new JsonResponse<>(Status.OK, "metadata", infosAll).build();
   }
 
   /**
@@ -290,4 +302,24 @@ public class InterpreterRestApi {
     return new JsonResponse<>(Status.OK, InterpreterPropertyType.getTypes()).build();
   }
 
+  private void checkIfUserCanRead(String settingId, String errorMsg) {
+    Set<String> userAndRoles = getUserAndRoles();
+    if (!interpreterAuthorization.hasReadAuthorization(userAndRoles, settingId)) {
+      throw new ForbiddenException(errorMsg);
+    }
+  }
+
+  private void checkIfUserCanWrite(String settingId, String errorMsg) {
+    Set<String> userAndRoles = getUserAndRoles();
+    if (!interpreterAuthorization.hasWriteAuthorization(userAndRoles, settingId)) {
+      throw new ForbiddenException(errorMsg);
+    }
+  }
+
+  private Set<String> getUserAndRoles() {
+    Set<String> userAndRoles = Sets.newHashSet();
+    userAndRoles.add(SecurityUtils.getPrincipal());
+    userAndRoles.addAll(SecurityUtils.getRoles());
+    return userAndRoles;
+  }
 }

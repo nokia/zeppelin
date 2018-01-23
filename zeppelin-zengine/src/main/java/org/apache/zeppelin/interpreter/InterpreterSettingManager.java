@@ -34,8 +34,6 @@ import org.apache.zeppelin.dep.DependencyResolver;
 import org.apache.zeppelin.display.AngularObjectRegistryListener;
 import org.apache.zeppelin.helium.ApplicationEventListener;
 import org.apache.zeppelin.interpreter.Interpreter.RegisteredInterpreter;
-import org.apache.zeppelin.interpreter.recovery.FileSystemRecoveryStorage;
-import org.apache.zeppelin.interpreter.recovery.NullRecoveryStorage;
 import org.apache.zeppelin.interpreter.recovery.RecoveryStorage;
 import org.apache.zeppelin.interpreter.remote.RemoteInterpreterProcess;
 import org.apache.zeppelin.interpreter.remote.RemoteInterpreterProcessListener;
@@ -64,16 +62,7 @@ import java.nio.file.DirectoryStream.Filter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * InterpreterSettingManager is the component which manage all the interpreter settings.
@@ -174,6 +163,23 @@ public class InterpreterSettingManager {
     init();
   }
 
+  public Map<String, Set<String>> getAllOwners() {
+    Map<String, Set<String>> authInfo = new HashMap<>();
+    for (InterpreterSetting interpreterSetting : get()) {
+      authInfo.put(interpreterSetting.getId(),
+              interpreterSetting.getOption().getOwners());
+    }
+    return authInfo;
+  }
+
+  public Map<String, Set<String>> getAllReaders() {
+    Map<String, Set<String>> authInfo = new HashMap<>();
+    for (InterpreterSetting interpreterSetting : get()) {
+      authInfo.put(interpreterSetting.getId(),
+              interpreterSetting.getOption().getReaders());
+    }
+    return authInfo;
+  }
 
   private void initInterpreterSetting(InterpreterSetting interpreterSetting) {
     interpreterSetting.setConf(conf)

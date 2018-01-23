@@ -95,6 +95,7 @@ function InterpreterCtrl($rootScope, $scope, $http, baseUrlSrv, ngToast, $timeou
 
   $scope.togglePermissions = function (intpName) {
     angular.element('#' + intpName + 'Owners').select2(getSelectJson())
+    angular.element('#' + intpName + 'Readers').select2(getSelectJson())
     if ($scope.showInterpreterAuth) {
       $scope.closePermissions()
     } else {
@@ -105,6 +106,7 @@ function InterpreterCtrl($rootScope, $scope, $http, baseUrlSrv, ngToast, $timeou
   $scope.$on('ngRenderFinished', function (event, data) {
     for (let setting = 0; setting < $scope.interpreterSettings.length; setting++) {
       angular.element('#' + $scope.interpreterSettings[setting].name + 'Owners').select2(getSelectJson())
+      angular.element('#' + $scope.interpreterSettings[setting].name + 'Readers').select2(getSelectJson())
     }
   })
 
@@ -185,11 +187,6 @@ function InterpreterCtrl($rootScope, $scope, $http, baseUrlSrv, ngToast, $timeou
 
   let removeTMPSettings = function (index) {
     interpreterSettingsTmp.splice(index, 1)
-  }
-
-  $scope.copyOriginInterpreterSettingProperties = function (settingId) {
-    let index = _.findIndex($scope.interpreterSettings, {'id': settingId})
-    interpreterSettingsTmp[index] = angular.copy($scope.interpreterSettings[index])
   }
 
   $scope.setPerNoteOption = function (settingId, sessionOption) {
@@ -383,6 +380,7 @@ function InterpreterCtrl($rootScope, $scope, $http, baseUrlSrv, ngToast, $timeou
             setting.option.remote = true
           }
           setting.option.owners = angular.element('#' + setting.name + 'Owners').val()
+          setting.option.readers = angular.element('#' + setting.name + 'Readers').val()
 
           let request = {
             option: angular.copy(setting.option),
@@ -523,6 +521,7 @@ function InterpreterCtrl($rootScope, $scope, $http, baseUrlSrv, ngToast, $timeou
       newSetting.option.setPermission = false
     }
     newSetting.option.owners = angular.element('#newInterpreterOwners').val()
+    newSetting.option.readers = angular.element('#newInterpreterReaders').val()
 
     let request = angular.copy($scope.newInterpreterSetting)
 
@@ -742,6 +741,24 @@ function InterpreterCtrl($rootScope, $scope, $http, baseUrlSrv, ngToast, $timeou
     }
   }
 
+  $scope.shouldEdit = function (form, settingId) {
+    $http.get(baseUrlSrv.getRestApiBase() + '/interpreter/metadata/' + settingId)
+      .then(function (res) {
+        if (res.data.body === undefined || res.data.body.canWrite) {
+          let index = _.findIndex($scope.interpreterSettings, {'id': settingId})
+          interpreterSettingsTmp[index] = angular.copy($scope.interpreterSettings[index])
+          form.$show()
+        } else {
+          BootstrapDialog.alert({
+            message: 'No permissions to edit interpreter settings'
+          })
+          form.$cancel()
+        }
+      }).catch(function (res) {
+        console.log('Error %o %o', res.status, res.data ? res.data.message : '')
+      })
+  }
+
   $scope.showErrorMessage = function (setting) {
     BootstrapDialog.show({
       title: 'Error downloading dependencies',
@@ -763,7 +780,7 @@ function InterpreterCtrl($rootScope, $scope, $http, baseUrlSrv, ngToast, $timeou
   $scope.showSparkUI = function (settingId) {
     $http.get(baseUrlSrv.getRestApiBase() + '/interpreter/metadata/' + settingId)
       .then(function (res) {
-        if (res.data.body === undefined) {
+        if (res.data.body.url === undefined) {
           BootstrapDialog.alert({
             message: 'No spark application running'
           })
