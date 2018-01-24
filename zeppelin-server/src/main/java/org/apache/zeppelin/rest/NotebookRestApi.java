@@ -756,8 +756,8 @@ public class NotebookRestApi {
     handleParagraphParams(message, note, paragraph);
 
     AuthenticationInfo subject = new AuthenticationInfo(SecurityUtils.getPrincipal());
-
     paragraph.setAuthenticationInfo(subject);
+
     note.persist(subject);
 
     note.run(paragraph.getId());
@@ -796,6 +796,9 @@ public class NotebookRestApi {
     if (paragraph.getListener() == null) {
       note.initializeJobListenerForParagraph(paragraph);
     }
+
+    AuthenticationInfo subject = new AuthenticationInfo(SecurityUtils.getPrincipal());
+    paragraph.setAuthenticationInfo(subject);
 
     paragraph.run();
 
