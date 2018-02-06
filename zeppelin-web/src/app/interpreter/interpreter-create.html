@@ -235,12 +235,13 @@ limitations under the License.
         <div class="row interpreter">
           <div class="col-md-12">
             <div class="checkbox remove-margin-top-bottom">
-          <span class="input-group" style="line-height:30px;">
-            <label>
-              <input type="checkbox" style="width:20px !important" id="idShowPermission" ng-click="togglePermissions('newInterpreter')" ng-model="newInterpreterSetting.option.setPermission"/>
-               Set permissions
-            </label>
-          </span>
+              <span class="input-group" style="line-height:30px;">
+                <label>
+                  <input type="checkbox" style="width:20px !important" id="idShowPermission"
+                         ng-click="togglePermissions('newInterpreter')" ng-model="newInterpreterSetting.option.setPermission"/>
+                   Set permissions
+                </label>
+              </span>
             </div>
           </div>
         </div>
@@ -283,8 +284,9 @@ limitations under the License.
             <tr>
               <th>name</th>
               <th>value</th>
-              <th>action</th>
+              <th>readonly</th>
               <th>description</th>
+              <th>action</th>
             </tr>
             <tr ng-repeat="key in newInterpreterSetting.properties | sortByKey">
               <td>{{key}}</td>
@@ -303,14 +305,17 @@ limitations under the License.
                        type="checkbox" msd-elastic ng-model="newInterpreterSetting.properties[key].value" />
               </td>
               <td style="vertical-align: middle;">
-                <button class="btn btn-default btn-sm fa fa-remove" ng-click="removeInterpreterProperty(key)">
-                </button>
+                <input type="checkbox" msd-elastic
+                       ng-model="newInterpreterSetting.properties[key].readonly" />
               </td>
               <td style="vertical-align: middle;">
                 {{newInterpreterSetting.properties[key].description}}
               </td>
+              <td style="vertical-align: middle;">
+                <button class="btn btn-default btn-sm fa fa-remove" ng-click="removeInterpreterProperty(key)">
+                </button>
+              </td>
             </tr>
-
             <tr>
               <td style="vertical-align: middle;">
                 <input pu-elastic-input pu-elastic-input-minwidth="180px"
@@ -325,13 +330,19 @@ limitations under the License.
                 <input ng-switch-when="checkbox" type="checkbox" msd-elastic ng-model="newInterpreterSetting.propertyValue" />
               </td>
               <td style="vertical-align: middle;">
+                <input type="checkbox" msd-elastic
+                       ng-model="newInterpreterSetting.propertyReadonly" />
+              </td>
+              <td style="vertical-align: middle;">
+                <textarea msd-elastic ng-model="newInterpreterSetting.propertyDesc"></textarea>
+              </td>
+              <td style="vertical-align: middle;">
                 <select msd-elastic ng-model="newInterpreterSetting.propertyType" ng-init="newInterpreterSetting.propertyType=interpreterPropertyTypes[0]"
                         ng-options="item for item in interpreterPropertyTypes" ng-change="defaultValueByType(newInterpreterSetting)">
                 </select>
                 <button class="btn btn-default btn-sm fa fa-plus" ng-click="addNewInterpreterProperty()">
                 </button>
               </td>
-              <td></td>
             </tr>
           </table>
         </div>

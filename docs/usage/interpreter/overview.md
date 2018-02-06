@@ -168,3 +168,4 @@ Zeppelin's interpreter properties allow the setting of the following attributes:
 * Value - Value of the property
 * Type - Value type of the property (number, string, url, ...)
 * Readonly - Flag indicating if property is editable or not in UI
+* Description - Description of the property

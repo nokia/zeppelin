@@ -18,9 +18,7 @@
 package org.apache.zeppelin.rest;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.DELETE;
@@ -79,7 +77,17 @@ public class InterpreterRestApi {
   @Path("setting")
   @ZeppelinApi
   public Response listSettings() {
-    return new JsonResponse<>(Status.OK, "", interpreterSettingManager.get()).build();
+    List<InterpreterSetting> settings = interpreterSettingManager.get();
+    List<InterpreterSetting> filteredSettings = new ArrayList<>();
+    Iterator<InterpreterSetting> it = settings.iterator();
+    Set<String> userAndRoles = getUserAndRoles();
+    while (it.hasNext()) {
+      InterpreterSetting c = it.next();
+      if (interpreterAuthorization.hasReadAuthorization(userAndRoles, c.getId())) {
+        filteredSettings.add(c);
+      }
+    }
+    return new JsonResponse<>(Status.OK, "", filteredSettings).build();
   }
 
   /**

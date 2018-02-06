@@ -45,6 +45,7 @@ public class InterpreterOption {
   private Set<String> owners;
   private Set<String> readers;
   private boolean isUserImpersonate;
+  private boolean disallowCustomInterpreter;
 
   public InterpreterOption() { }
 
@@ -90,6 +91,14 @@ public class InterpreterOption {
 
   public void setUserImpersonate(boolean userImpersonate) {
     isUserImpersonate = userImpersonate;
+  }
+
+  public boolean getDisallowCustomInterpreter() {
+    return disallowCustomInterpreter;
+  }
+
+  public void setDisallowCustomInterpreter(boolean customInterpreter) {
+    disallowCustomInterpreter = customInterpreter;
   }
 
   public static InterpreterOption fromInterpreterOption(InterpreterOption other) {

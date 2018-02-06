@@ -51,7 +51,7 @@ limitations under the License.
       <div class="col-md-12">
         <br/>
         <button class="btn btn-default btn-sm"
-              ng-click="showAddNewSetting = !showAddNewSetting">
+                ng-click="showAddNewSetting = !showAddNewSetting">
           <i class="fa fa-plus"></i>
           Create custom interpreter
         </button>
@@ -94,7 +94,6 @@ limitations under the License.
      ng-repeat="setting in interpreterSettings | orderBy: 'name' | filter: {name:searchInterpreter}" >
   <div id="{{setting.name | lowercase}}">
     <div class="row interpreter">
-
       <div class="col-md-12">
         <h3 class="interpreter-title">{{setting.name}}
           <small>
@@ -361,7 +360,21 @@ limitations under the License.
         <div class="checkbox remove-margin-top-bottom">
           <span class="input-group" style="line-height:30px;">
             <label>
-              <input type="checkbox" style="width:20px !important" id="idShowPermission" ng-click="togglePermissions(setting.name)" ng-model="setting.option.setPermission" ng-disabled="!valueform.$visible"/>
+              <input type="checkbox" style="width:20px" id="disallowCustomInterpreter" ng-model="setting.option.disallowCustomInterpreter" ng-disabled="!valueform.$visible"/>
+              Disallow custom interpreter
+            </label>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="row interpreter">
+      <div class="col-md-12">
+        <div class="checkbox remove-margin-top-bottom">
+          <span class="input-group" style="line-height:30px;">
+            <label>
+              <input type="checkbox" style="width:20px !important" id="idShowPermission"
+                     ng-click="togglePermissions(setting.name)" ng-model="setting.option.setPermission"
+                     ng-disabled="!valueform.$visible"/>
                Set permissions
             </label>
           </span>
@@ -409,9 +422,11 @@ limitations under the License.
         <table class="table table-striped">
           <thead>
             <tr>
-              <th style="width:40%">name</th>
-              <th style="width:40%">value</th>
-              <th style="width:20%" ng-if="valueform.$visible">action</th>
+              <th style="width:30%">name</th>
+              <th style="width:30%">value</th>
+              <th style="width:10%" ng-if="valueform.$visible">readonly</th>
+              <th style="width:20%">description</th>
+              <th style="width:10%" ng-if="valueform.$visible">action</th>
             </tr>
           </thead>
           <tr ng-repeat="key in setting.properties | sortByKey" >
@@ -455,6 +470,13 @@ limitations under the License.
               </span>
             </td>
             <td style="vertical-align: middle;" ng-if="valueform.$visible">
+              <input type="checkbox" msd-elastic ng-disabled="true"
+                     ng-model="setting.properties[key].readonly" />
+            </td>
+            <td style="vertical-align: middle;">{{setting.properties[key].description}}
+            </td>
+            <td style="vertical-align: middle;" ng-if="valueform.$visible
+              && !setting.properties[key].readonly">
               <button class="btn btn-default btn-sm fa fa-remove"
                    ng-click="removeInterpreterProperty(key, setting.id)">
               </button>
@@ -465,7 +487,6 @@ limitations under the License.
               <input ng-model="setting.propertyKey"
                      pu-elastic-input pu-elastic-input-minwidth="180px" />
             </td>
-
             <td style="vertical-align: middle;" ng-switch on="setting.propertyType">
               <textarea ng-switch-default msd-elastic ng-model="setting.propertyValue"></textarea>
               <input ng-switch-when="string" type="text" msd-elastic ng-model="setting.propertyValue"/>
@@ -473,6 +494,13 @@ limitations under the License.
               <input ng-switch-when="url" type="text" msd-elastic ng-model="setting.propertyValue" />
               <input ng-switch-when="password" type="password" msd-elastic ng-model="setting.propertyValue" />
               <input ng-switch-when="checkbox" type="checkbox" msd-elastic ng-model="setting.propertyValue" />
+            </td>
+            <td style="vertical-align: middle;">
+              <input type="checkbox" msd-elastic ng-model="setting.propertyReadonly" />
+            </td>
+            <td style="vertical-align: middle;">
+              <input ng-model="setting.propertyDesc"
+                     pu-elastic-input pu-elastic-input-minwidth="180px" />
             </td>
             <td style="vertical-align: middle;">
               <select ng-model="setting.propertyType" ng-init="setting.propertyType=interpreterPropertyTypes[0]"

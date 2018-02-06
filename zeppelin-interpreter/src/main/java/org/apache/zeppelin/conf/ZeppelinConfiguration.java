@@ -730,7 +730,6 @@ public class ZeppelinConfiguration extends XMLConfiguration {
 
     ZEPPELIN_OWNER_ROLE("zeppelin.notebook.default.owner.username", "");
 
-
     private String varName;
     @SuppressWarnings("rawtypes")
     private Class varClass;

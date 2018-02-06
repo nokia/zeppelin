@@ -25,12 +25,15 @@ public class InterpreterProperty {
   private Object value;
   private String type;
   private Boolean readonly;
+  private String description;
 
-  public InterpreterProperty(String name, Object value, String type, Boolean readonly) {
+  public InterpreterProperty(String name, Object value, String type,
+                             Boolean readonly, String description) {
     this.name = name;
     this.value = value;
     this.type = type;
     this.readonly = readonly;
+    this.description = description;
   }
 
   public InterpreterProperty(String name, Object value) {
@@ -68,6 +71,14 @@ public class InterpreterProperty {
 
   public void setReadonly(Boolean readonly) {
     this.readonly = readonly;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
   }
 
   @Override

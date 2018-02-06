@@ -156,9 +156,16 @@ function InterpreterCtrl($rootScope, $scope, $http, baseUrlSrv, ngToast, $timeou
     }
   }
 
-  let getAvailableInterpreters = function () {
-    $http.get(baseUrlSrv.getRestApiBase() + '/interpreter').then(function (res) {
-      $scope.availableInterpreters = res.data.body
+  let getCustomInterpreters = function () {
+    $http.get(baseUrlSrv.getRestApiBase() + '/interpreter/setting').then(function (res) {
+      let customInterpreters = {}
+      for (let i = 0; i < res.data.body.length; i++) {
+        let intSetting = res.data.body[i]
+        if (!intSetting.option.disallowCustomInterpreter) {
+          customInterpreters[i] = intSetting
+        }
+      }
+      $scope.availableInterpreters = customInterpreters
     }).catch(function (res) {
       console.log('Error %o %o', res.status, res.data ? res.data.message : '')
     })
@@ -175,9 +182,11 @@ function InterpreterCtrl($rootScope, $scope, $http, baseUrlSrv, ngToast, $timeou
 
   let emptyNewProperty = function(object) {
     angular.extend(object, {
-      propertyValue: '',
       propertyKey: '',
-      propertyType: $scope.interpreterPropertyTypes[0]
+      propertyValue: '',
+      propertyReadonly: false,
+      propertyType: $scope.interpreterPropertyTypes[0],
+      propertyDesc: ''
     })
   }
 
@@ -371,6 +380,9 @@ function InterpreterCtrl($rootScope, $scope, $http, baseUrlSrv, ngToast, $timeou
           if (setting.option.isUserImpersonate === undefined) {
             setting.option.isUserImpersonate = false
           }
+          if (setting.option.disallowCustomInterpreter === undefined) {
+            setting.option.disallowCustomInterpreter = false
+          }
           if (!($scope.getInterpreterRunningOption(settingId) === 'Per User' &&
             $scope.getPerUserOption(settingId) === 'isolated')) {
             setting.option.isUserImpersonate = false
@@ -451,7 +463,8 @@ function InterpreterCtrl($rootScope, $scope, $http, baseUrlSrv, ngToast, $timeou
         properties[key] = {
           value: intpInfo[key].defaultValue,
           description: intpInfo[key].description,
-          type: intpInfo[key].type
+          type: intpInfo[key].type,
+          readonly: intpInfo[key].readonly
         }
       }
     }
@@ -533,6 +546,7 @@ function InterpreterCtrl($rootScope, $scope, $http, baseUrlSrv, ngToast, $timeou
         value: newSetting.properties[p].value,
         type: newSetting.properties[p].type,
         readonly: newSetting.properties[p].readonly,
+        description: newSetting.properties[p].description,
         name: p
       }
     }
@@ -607,7 +621,9 @@ function InterpreterCtrl($rootScope, $scope, $http, baseUrlSrv, ngToast, $timeou
       }
       $scope.newInterpreterSetting.properties[$scope.newInterpreterSetting.propertyKey] = {
         value: $scope.newInterpreterSetting.propertyValue,
-        type: $scope.newInterpreterSetting.propertyType
+        readonly: $scope.newInterpreterSetting.propertyReadonly,
+        type: $scope.newInterpreterSetting.propertyType,
+        description: $scope.newInterpreterSetting.propertyDesc
       }
       emptyNewProperty($scope.newInterpreterSetting)
     } else {
@@ -618,9 +634,21 @@ function InterpreterCtrl($rootScope, $scope, $http, baseUrlSrv, ngToast, $timeou
       if (!setting.propertyKey || setting.propertyKey === '') {
         return
       }
+      for (let prop in setting.properties) {
+        if (setting.properties[prop].name === setting.propertyKey) {
+          BootstrapDialog.alert({
+            closable: true,
+            title: 'Add property',
+            message: 'Key ' + setting.propertyKey + ' already exists'
+          })
+          return
+        }
+      }
       setting.properties[setting.propertyKey] = {
         value: setting.propertyValue,
-        type: setting.propertyType
+        readonly: setting.propertyReadonly,
+        type: setting.propertyType,
+        description: setting.propertyDesc
       }
       emptyNewProperty(setting)
     }
@@ -773,7 +801,7 @@ function InterpreterCtrl($rootScope, $scope, $http, baseUrlSrv, ngToast, $timeou
     $scope.resetNewRepositorySetting()
 
     getInterpreterSettings()
-    getAvailableInterpreters()
+    getCustomInterpreters()
     getRepositories()
   }
 

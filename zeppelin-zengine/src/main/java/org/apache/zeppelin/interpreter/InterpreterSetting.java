@@ -20,13 +20,9 @@ package org.apache.zeppelin.interpreter;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.internal.StringMap;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.zeppelin.conf.ZeppelinConfiguration;
 import org.apache.zeppelin.dep.Dependency;
 import org.apache.zeppelin.dep.DependencyResolver;
@@ -45,22 +41,15 @@ import org.apache.zeppelin.interpreter.remote.RemoteInterpreter;
 import org.apache.zeppelin.interpreter.remote.RemoteInterpreterEventPoller;
 import org.apache.zeppelin.interpreter.remote.RemoteInterpreterProcess;
 import org.apache.zeppelin.interpreter.remote.RemoteInterpreterProcessListener;
-import org.apache.zeppelin.interpreter.remote.RemoteInterpreterUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -142,12 +131,8 @@ public class InterpreterSetting {
   private transient InterpreterLauncher launcher;
 
   private transient LifecycleManager lifecycleManager;
-  ///////////////////////////////////////////////////////////////////////////////////////////
-
-
 
   private transient RecoveryStorage recoveryStorage;
-  ///////////////////////////////////////////////////////////////////////////////////////////
 
   /**
    * Builder class for InterpreterSetting
@@ -854,7 +839,7 @@ public class InterpreterSetting {
               entry.getKey().toString(),
               entry.getValue(),
               InterpreterPropertyType.STRING.getValue(),
-              false);
+              false, "");
           newProperties.put(entry.getKey().toString(), newProperty);
         } else {
           // already converted
@@ -878,7 +863,8 @@ public class InterpreterSetting {
               stringMap.get("value"),
               stringMap.containsKey("type") ? stringMap.get("type").toString() : "string",
               stringMap.containsKey("readonly") ?
-                      Boolean.parseBoolean(stringMap.get("readonly").toString()) : false);
+                      Boolean.parseBoolean(stringMap.get("readonly").toString()) : false,
+              stringMap.containsKey("description") ? stringMap.get("description").toString() : "");
 
           newProperties.put(newProperty.getName(), newProperty);
         } else if (value instanceof DefaultInterpreterProperty){
@@ -887,7 +873,8 @@ public class InterpreterSetting {
               key,
               dProperty.getValue(),
               dProperty.getType() != null ? dProperty.getType() : "string",
-              dProperty.getReadonly() != null ? dProperty.getReadonly() : false
+              dProperty.getReadonly() != null ? dProperty.getReadonly() : false,
+              dProperty.getDescription() != null ? dProperty.getDescription() : ""
           );
           newProperties.put(key, property);
         } else {

@@ -112,7 +112,6 @@ public class InterpreterSettingManager {
   private DependencyResolver dependencyResolver;
   private LifecycleManager lifecycleManager;
   private RecoveryStorage recoveryStorage;
-
   public InterpreterSettingManager(ZeppelinConfiguration zeppelinConfiguration,
                                    AngularObjectRegistryListener angularObjectRegistryListener,
                                    RemoteInterpreterProcessListener
@@ -276,7 +275,7 @@ public class InterpreterSettingManager {
     }
   }
 
-  public void saveToFile() throws IOException {
+  private void saveToFile() throws IOException {
     synchronized (interpreterSettings) {
       InterpreterInfoSaving info = new InterpreterInfoSaving();
       info.interpreterBindings = interpreterBindings;
