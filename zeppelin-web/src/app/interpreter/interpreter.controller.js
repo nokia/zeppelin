@@ -619,6 +619,18 @@ function InterpreterCtrl($rootScope, $scope, $http, baseUrlSrv, ngToast, $timeou
       if (!setting.propertyKey || setting.propertyKey === '') {
         return
       }
+
+      for (let prop in setting.properties) {
+        if (setting.properties[prop].name === setting.propertyKey) {
+          BootstrapDialog.alert({
+            closable: true,
+            title: 'Add property',
+            message: 'Key ' + setting.propertyKey + ' already exists'
+          })
+          return
+        }
+      }
+
       setting.properties[setting.propertyKey] = {
         value: setting.propertyValue,
         type: setting.propertyType

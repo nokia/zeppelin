@@ -264,11 +264,11 @@ public class InterpreterSettingManager {
           }
         }
 
-      // force interpreter dependencies loading once the
-      // repositories have been loaded.
-      for (InterpreterSetting setting : interpreterSettings.values()) {
-        setting.setDependencies(setting.getDependencies());
-      }
+        // force interpreter dependencies loading once the
+        // repositories have been loaded.
+        for (InterpreterSetting setting : interpreterSettings.values()) {
+          setting.setDependencies(setting.getDependencies());
+        }
       }
     } catch (IOException e) {
       LOGGER.error("Fail to load interpreter setting configuration file: "
