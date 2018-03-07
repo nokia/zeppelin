@@ -143,7 +143,7 @@ function NavCtrl($scope, $rootScope, $http, $routeParams, $location,
         logoutURL = logoutURL.replace('//', '//false:false@');
       }
 
-      $http.post(logoutURL).error(function() {
+      $http.post(logoutURL).error(function(errorResponse) {
         $rootScope.userName = '';
         $rootScope.ticket.principal = '';
         $rootScope.ticket.screenUsername = '';
@@ -153,7 +153,13 @@ function NavCtrl($scope, $rootScope, $http, $routeParams, $location,
           message: 'Logout Success',
         });
         setTimeout(function() {
-          window.location = baseUrlSrv.getBase();
+          let redirect = errorResponse.headers('Location');
+          if (errorResponse.status === 403 && redirect !== undefined) {
+            // Handle page redirect
+            window.location.href = redirect;
+          } else {
+            window.location = baseUrlSrv.getBase();
+          }
         }, 1000);
       });
     });
