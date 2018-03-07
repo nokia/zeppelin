@@ -172,7 +172,11 @@ function InterpreterCtrl($rootScope, $scope, $http, baseUrlSrv, ngToast, $timeou
   };
 
   let emptyNewProperty = function(object) {
-    angular.extend(object, {propertyValue: '', propertyKey: '', propertyType: $scope.interpreterPropertyTypes[0]});
+    angular.extend(object, {
+      propertyValue: '',
+      propertyKey: '',
+      propertyType: $scope.interpreterPropertyTypes[0],
+    });
   };
 
   let emptyNewDependency = function(object) {
@@ -535,6 +539,7 @@ function InterpreterCtrl($rootScope, $scope, $http, baseUrlSrv, ngToast, $timeou
         newProperties[p] = {
           value: newSetting.properties[p].value,
           type: newSetting.properties[p].type,
+          readonly: newSetting.properties[p].readonly,
           name: p,
         };
       }
@@ -622,9 +627,21 @@ function InterpreterCtrl($rootScope, $scope, $http, baseUrlSrv, ngToast, $timeou
         return;
       }
 
-      setting.properties[setting.propertyKey] =
-        {value: setting.propertyValue, type: setting.propertyType};
+      for (let prop in setting.properties) {
+        if (setting.properties[prop].name === setting.propertyKey) {
+          BootstrapDialog.alert({
+            closable: true,
+            title: 'Add property',
+            message: 'Key ' + setting.propertyKey + ' already exists',
+          });
+          return;
+        }
+      }
 
+      setting.properties[setting.propertyKey] = {
+        value: setting.propertyValue,
+        type: setting.propertyType,
+      };
       emptyNewProperty(setting);
     }
   };
