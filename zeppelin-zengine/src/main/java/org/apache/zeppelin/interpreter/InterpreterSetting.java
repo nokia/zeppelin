@@ -881,7 +881,8 @@ public class InterpreterSetting {
           InterpreterProperty newProperty = new InterpreterProperty(
               entry.getKey().toString(),
               entry.getValue(),
-              InterpreterPropertyType.STRING.getValue());
+              InterpreterPropertyType.STRING.getValue(),
+              false);
           newProperties.put(entry.getKey().toString(), newProperty);
         } else {
           // already converted
@@ -903,7 +904,9 @@ public class InterpreterSetting {
           InterpreterProperty newProperty = new InterpreterProperty(
               key,
               stringMap.get("value"),
-              stringMap.containsKey("type") ? stringMap.get("type").toString() : "string");
+              stringMap.containsKey("type") ? stringMap.get("type").toString() : "string",
+              stringMap.containsKey("readonly") ?
+                      Boolean.parseBoolean(stringMap.get("readonly").toString()) : false);
 
           newProperties.put(newProperty.getName(), newProperty);
         } else if (value instanceof DefaultInterpreterProperty){
@@ -911,15 +914,16 @@ public class InterpreterSetting {
           InterpreterProperty property = new InterpreterProperty(
               key,
               dProperty.getValue(),
-              dProperty.getType() != null ? dProperty.getType() : "string"
-              // in case user forget to specify type in interpreter-setting.json
+              dProperty.getType() != null ? dProperty.getType() : "string",
+              dProperty.getReadonly() != null ? dProperty.getReadonly() : false
           );
           newProperties.put(key, property);
         } else if (value instanceof String) {
           InterpreterProperty newProperty = new InterpreterProperty(
               key,
               value,
-              "string");
+              "string",
+              false);
 
           newProperties.put(newProperty.getName(), newProperty);
         } else {
