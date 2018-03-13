@@ -142,8 +142,13 @@ function NavCtrl($scope, $rootScope, $http, $routeParams, $location,
         // for firefox and safari
         logoutURL = logoutURL.replace('//', '//false:false@');
       }
+    });
 
-      $http.post(logoutURL).error(function() {
+    let config = (process.env.PROD) ? {headers: {'X-Requested-With': 'XMLHttpRequest'}} : {};
+
+    $http.post(logoutURL, config).then(
+      function(response) {},
+      function(errorResponse) {
         $rootScope.userName = '';
         $rootScope.ticket.principal = '';
         $rootScope.ticket.screenUsername = '';
@@ -153,10 +158,15 @@ function NavCtrl($scope, $rootScope, $http, $routeParams, $location,
           message: 'Logout Success',
         });
         setTimeout(function() {
-          window.location = baseUrlSrv.getBase();
+          let redirect = errorResponse.headers('Location');
+          if (errorResponse.status === 403 && redirect !== undefined) {
+            // Handle page redirect
+            window.location.href = redirect;
+          } else {
+            window.location = baseUrlSrv.getBase();
+          }
         }, 1000);
       });
-    });
   }
 
   function detectIE() {
