@@ -146,7 +146,7 @@ function NavCtrl($scope, $rootScope, $http, $routeParams, $location,
       let config = (process.env.PROD) ? {headers: {'X-Requested-With': 'XMLHttpRequest'}} : {};
 
       $http.post(logoutURL, config).then(
-        function (response) { },
+        function (response) {},
         function(errorResponse) {
           $rootScope.userName = '';
           $rootScope.ticket.principal = '';
@@ -165,7 +165,7 @@ function NavCtrl($scope, $rootScope, $http, $routeParams, $location,
               window.location = baseUrlSrv.getBase();
             }
           }, 1000);
-      });
+        });
     });
   }
 
