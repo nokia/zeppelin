@@ -114,6 +114,7 @@ before_install:
   - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1600x1024x16"
   #- ./dev/change_scala_version.sh $SCALA_VER
   - source .environ
+  - rm .environ
 
 install:
   - echo "mvn $BUILD_FLAG $MODULES $PROFILE -B"
@@ -147,7 +148,6 @@ after_success:
 
 after_failure:
   - echo "Travis exited with ${TRAVIS_TEST_RESULT}"
-  - cat zeppelin/target/rat.txt
   - find . -name rat.txt | xargs cat
   - cat logs/*
   - cat zeppelin-distribution/target/zeppelin-*-SNAPSHOT/zeppelin-*-SNAPSHOT/logs/zeppelin*.log
