@@ -16,7 +16,8 @@
 language: java
 
 dist: trusty
-sudo: required
+sudo: false
+# sudo: required
 
 cache:
   apt: true
@@ -41,15 +42,15 @@ env:
 
 matrix:
   include:
-    # # Test License compliance using RAT tool
-    # - jdk: "oraclejdk8"
-    #   env: BUILD_PLUGINS="false" SCALA_VER="2.11" PROFILE="-Prat" BUILD_FLAG="clean" TEST_FLAG="org.apache.rat:apache-rat-plugin:check" TEST_PROJECTS=""
+    # Test License compliance using RAT tool
+    - jdk: "oraclejdk8"
+      env: DSC="Test License compliance using RAT tool" BUILD_PLUGINS="false" SCALA_VER="2.11" PROFILE="-Prat" BUILD_FLAG="clean" TEST_FLAG="org.apache.rat:apache-rat-plugin:check" TEST_PROJECTS=""
 
     # Run e2e tests (in zeppelin-web)
     - jdk: "oraclejdk8"
       addons:
         chrome: latest
-      env: BUILD_PLUGINS="false" CI="true" WEB_E2E="true" PYTHON="2" SCALA_VER="2.11" SPARK_VER="2.1.0" HADOOP_VER="2.6" PROFILE="-Phadoop2 -Pscala-2.11" BUILD_FLAG="package -DskipTests -DskipRat" TEST_FLAG="verify -DskipRat" MODULES="-pl ${INTERPRETERS}" TEST_MODULES="-pl zeppelin-web" TEST_PROJECTS="-Pweb-e2e"
+      env: DSC="Run e2e tests (in zeppelin-web)" BUILD_PLUGINS="false" CI="true" WEB_E2E="true" PYTHON="2" SCALA_VER="2.11" SPARK_VER="2.1.0" HADOOP_VER="2.6" PROFILE="-Phadoop2 -Pscala-2.11" BUILD_FLAG="package -DskipTests -DskipRat" TEST_FLAG="verify -DskipRat" MODULES="-pl ${INTERPRETERS}" TEST_MODULES="-pl zeppelin-web" TEST_PROJECTS="-Pweb-e2e"
 
     # # Test core modules
     # # Several tests were excluded from this configuration due to the following issues:
