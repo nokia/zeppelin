@@ -18,13 +18,12 @@
 
 # Script for installing R / Python dependencies for Travis CI
 set -ev
-touch ~/.environ
+touch .environ
 
 # Install R dependencies if SPARKR is true
 if [[ "${SPARKR}" = "true" ]] ; then
-  echo "R_LIBS=~/R" > ~/.Renviron
-  echo "export R_LIBS=~/R" >> ~/.environ
-  source ~/.environ
+  echo "export R_LIBS=~/R" >> .environ
+  source .environ
   if [[ ! -d "$HOME/R/knitr" ]] ; then
     mkdir -p ~/R
     R -e "install.packages('evaluate', repos = 'http://cran.us.r-project.org', lib='~/R')"  > /dev/null 2>&1
@@ -38,8 +37,8 @@ fi
 if [[ -n "$PYTHON" ]] ; then
   wget https://repo.continuum.io/miniconda/Miniconda${PYTHON}-4.2.12-Linux-x86_64.sh -O miniconda.sh
   bash miniconda.sh -b -p $HOME/miniconda
-  echo "export PATH='$HOME/miniconda/bin:$PATH'" >> ~/.environ
-  source ~/.environ
+  echo "export PATH='$HOME/miniconda/bin:$PATH'" >> .environ
+  source .environ
   hash -r
   conda config --set always_yes yes --set changeps1 no
   conda update -q conda
