@@ -244,9 +244,9 @@ before_script:
   - tail conf/zeppelin-env.sh
   # https://docs.travis-ci.com/user/gui-and-headless-browsers/#Using-xvfb-to-Run-Tests-That-Require-a-GUI
   - export DISPLAY=:99.0
+  # daemon is already started before install ...
   # - if [[ -n $TEST_MODULES ]]; then export DISPLAY=:99.0; sh -e /etc/init.d/xvfb start; sleep 3; fi
   # display info log for debugging
-  # - if [[ -n $TEST_MODULES ]]; then echo "MAVEN_OPTS='-Xms1024M -Xmx2048M -XX:MaxPermSize=1024m -XX:-UseGCOverheadLimit -Dorg.slf4j.simpleLogger.defaultLogLevel=info'" > ~/.mavenrc; fi
   - if [[ -n $TEST_MODULES ]]; then sed -i "s|LogLevel=warn|LogLevel=debug|" ~/.mavenrc; fi
 
 script:
