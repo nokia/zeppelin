@@ -42,7 +42,7 @@ env:
 matrix:
   include:
     # Test License compliance using RAT tool
-    - jdk: "openjdk7"
+    - jdk: "oraclejdk8"
       env: BUILD_PLUGINS="false" SCALA_VER="2.11" PROFILE="-Prat" BUILD_FLAG="clean" TEST_FLAG="org.apache.rat:apache-rat-plugin:check" TEST_PROJECTS=""
 
     # Run e2e tests (in zeppelin-web)
