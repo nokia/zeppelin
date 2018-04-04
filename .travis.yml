@@ -133,7 +133,7 @@ matrix:
         - BUILD_FLAG="install -DskipTests -DskipRat -am"
         - TEST_FLAG="test -DskipRat -am"
         - MODULES="-pl zeppelin-zengine,zeppelin-server,spark/interpreter,spark/spark-dependencies"
-        - TEST_PROJECTS="-Dtest=ZeppelinSparkClusterTest,org.apache.zeppelin.spark.*" # too much error prone ... -DfailIfNoTests=false"
+        - TEST_PROJECTS="-Dtest=ZeppelinSparkClusterTest,org.apache.zeppelin.spark.* -DfailIfNoTests=false"
 
     # Integration test of spark interpreter with different spark versions under python3, only run SparkIntegrationTest. Also run spark unit test of spark 1.6 in this build.
     - jdk: "oraclejdk8"
@@ -146,7 +146,7 @@ matrix:
         - BUILD_FLAG="install -DskipTests -DskipRat -am"
         - TEST_FLAG="test -DskipRat -am"
         - MODULES="-pl zeppelin-zengine,spark/interpreter,spark/spark-dependencies"
-        - TEST_PROJECTS="-Dtest=SparkIntegrationTest,org.apache.zeppelin.spark.*" # too much error prone ... -DfailIfNoTests=false"
+        - TEST_PROJECTS="-Dtest=SparkIntegrationTest,org.apache.zeppelin.spark.* -DfailIfNoTests=false"
 
     # Test spark module for 2.1.0 with scala 2.11
     - jdk: "openjdk7"
@@ -160,7 +160,7 @@ matrix:
         - BUILD_FLAG="package -DskipTests -DskipRat -am"
         - TEST_FLAG="test -DskipRat -am"
         - MODULES="-pl spark/interpreter,spark/spark-dependencies"
-        - TEST_PROJECTS="-Dtest=org.apache.zeppelin.spark.*" # too much error prone ... -DfailIfNoTests=false"
+        - TEST_PROJECTS="-Dtest=org.apache.zeppelin.spark.* -DfailIfNoTests=false"
 
     # Test spark module for 2.0.2 with scala 2.11
     - jdk: "oraclejdk8"
@@ -174,7 +174,7 @@ matrix:
         - BUILD_FLAG="package -DskipTests -DskipRat -am"
         - TEST_FLAG="test -DskipRat -am"
         - MODULES="-pl spark/interpreter,spark/spark-dependencies"
-        - TEST_PROJECTS="-Dtest=org.apache.zeppelin.spark.*" # too much error prone ... -DfailIfNoTests=false"
+        - TEST_PROJECTS="-Dtest=org.apache.zeppelin.spark.* -DfailIfNoTests=false"
 
     # Test python/pyspark with python 2, livy 0.5
     - jdk: "openjdk7"
