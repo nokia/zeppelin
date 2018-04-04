@@ -56,26 +56,70 @@ matrix:
     # Run e2e tests (in zeppelin-web)
     - jdk: "oraclejdk8"
       addons:
-        chrome: latest
-      env: DSC="Run e2e tests (in zeppelin-web)" BUILD_PLUGINS="false" CI="true" WEB_E2E="true" PYTHON="2" SCALA_VER="2.11" SPARK_VER="2.1.0" HADOOP_VER="2.6" PROFILE="-Phadoop2 -Pscala-2.11" BUILD_FLAG="package -DskipTests -DskipRat" TEST_FLAG="verify -DskipRat" MODULES="-pl ${INTERPRETERS}" TEST_MODULES="-pl zeppelin-web" TEST_PROJECTS="-Pweb-e2e"
+        chrome: stable
+      env:
+        - DSC="Run e2e tests (in zeppelin-web)"
+        - BUILD_PLUGINS="false"
+        - CI="true"
+        - WEB_E2E="true"
+        - PYTHON="2"
+        - SCALA_VER="2.11"
+        - SPARK_VER="2.1.0"
+        - HADOOP_VER="2.6"
+        - PROFILE="-Phadoop2 -Pscala-2.11" BUILD_FLAG="package -DskipTests -DskipRat"
+        - TEST_FLAG="verify -DskipRat"
+        - MODULES="-pl ${INTERPRETERS}"
+        - TEST_MODULES="-pl zeppelin-web"
+        - TEST_PROJECTS="-Pweb-e2e"
 
-    # # Test core modules
-    # # Several tests were excluded from this configuration due to the following issues:
-    # # HeliumApplicationFactoryTest - https://issues.apache.org/jira/browse/ZEPPELIN-2470
-    # # After issues are fixed these tests need to be included back by removing them from the "-Dtests.to.exclude" property
-    # - jdk: "oraclejdk8"
-    #   env: BUILD_PLUGINS="true" PYTHON="3" SPARKR="true" PROFILE="-Pspark-2.2 -Pscalding -Phelium-dev -Pexamples -Pscala-2.11" BUILD_FLAG="install -Pbuild-distr -DskipRat" TEST_FLAG="verify -Pusing-packaged-distr -DskipRat" MODULES="-pl ${INTERPRETERS}" TEST_PROJECTS="-Dtests.to.exclude=**/SparkIntegrationTest.java,**/ZeppelinSparkClusterTest.java,**/org/apache/zeppelin/spark/*,**/HeliumApplicationFactoryTest.java -DfailIfNoTests=false"
-    #
-    # # Test selenium with spark module for 1.6.3
-    # - jdk: "oraclejdk8"
-    #   addons:
-    #     firefox: latest
-    #   env: BUILD_PLUGINS="true" CI="true" PYTHON="2" SCALA_VER="2.10" SPARK_VER="1.6.3" HADOOP_VER="2.6" PROFILE="-Pspark-1.6 -Phadoop2 -Phadoop-2.6 -Phelium-dev -Pexamples -Pintegration" BUILD_FLAG="install -DskipTests -DskipRat" TEST_FLAG="verify -DskipRat" TEST_PROJECTS="-pl .,zeppelin-integration -DfailIfNoTests=false" MOZ_HEADLESS=1
-    #
-    # # Test interpreter modules
-    # - jdk: "openjdk7"
-    #   env: BUILD_PLUGINS="false" PYTHON="3" SCALA_VER="2.10" PROFILE="-Pscalding" BUILD_FLAG="package -DskipTests -DskipRat -Pr" TEST_FLAG="test -DskipRat" MODULES="-pl $(echo .,zeppelin-interpreter,${INTERPRETERS} | sed 's/!//g')" TEST_PROJECTS=""
-    #
+    # Test core modules
+    # Several tests were excluded from this configuration due to the following issues:
+    # HeliumApplicationFactoryTest - https://issues.apache.org/jira/browse/ZEPPELIN-2470
+    # After issues are fixed these tests need to be included back by removing them from the "-Dtests.to.exclude" property
+    - jdk: "oraclejdk8"
+      env:
+        - DSC="Test core modules"
+        - BUILD_PLUGINS="true"
+        - PYTHON="3"
+        - SPARKR="true"
+        - PROFILE="-Pspark-2.2 -Pscalding -Phelium-dev -Pexamples -Pscala-2.11"
+        - BUILD_FLAG="install -Pbuild-distr -DskipRat"
+        - TEST_FLAG="verify -Pusing-packaged-distr -DskipRat"
+        - MODULES="-pl ${INTERPRETERS}"
+        # let's be optimistic :-)
+        # - TEST_PROJECTS="-Dtests.to.exclude=**/SparkIntegrationTest.java,**/ZeppelinSparkClusterTest.java,**/org/apache/zeppelin/spark/*,**/HeliumApplicationFactoryTest.java -DfailIfNoTests=false"
+
+    # Test selenium with spark module for 1.6.3
+    - jdk: "oraclejdk8"
+      addons:
+        firefox: latest
+      env:
+        - DSC="Test selenium with spark module for 1.6.3"
+        - BUILD_PLUGINS="true"
+        - CI="true"
+        - PYTHON="2"
+        - SCALA_VER="2.10"
+        - SPARK_VER="1.6.3"
+        - HADOOP_VER="2.6"
+        - PROFILE="-Pspark-1.6 -Phadoop2 -Phadoop-2.6 -Phelium-dev -Pexamples -Pintegration"
+        - BUILD_FLAG="install -DskipTests -DskipRat"
+        - TEST_FLAG="verify -DskipRat"
+        - TEST_PROJECTS="-pl .,zeppelin-integration -DfailIfNoTests=false"
+        - MOZ_HEADLESS=1
+
+    # Test interpreter modules
+    - jdk: "openjdk7"
+      env:
+        - DSC="Test interpreter modules"
+        - BUILD_PLUGINS="false"
+        - PYTHON="3"
+        - SCALA_VER="2.10"
+        - PROFILE="-Pscalding"
+        - BUILD_FLAG="package -DskipTests -DskipRat -Pr"
+        - TEST_FLAG="test -DskipRat"
+        - MODULES="-pl $(echo .,zeppelin-interpreter,${INTERPRETERS} | sed 's/!//g')"
+        - TEST_PROJECTS=""
+
     # # Run ZeppelinSparkClusterTest & SparkIntegrationTest in one build would exceed the time limitation of travis, so running them separately
     #
     # # Integration test of spark interpreter with different spark versions under python2, only run ZeppelinSparkClusterTest. Also run spark unit test of spark 2.2 in this build.
@@ -104,6 +148,7 @@ matrix:
     #   env: BUILD_PLUGINS="false" PYTHON="3" SPARK_VER="2.2.0" HADOOP_VER="2.6" LIVY_VER="0.5.0-incubating" PROFILE="" BUILD_FLAG="install -am -DskipTests -DskipRat" TEST_FLAG="verify -DskipRat" MODULES="-pl livy" TEST_PROJECTS=""
 
 before_install:
+  - sudo apt-get update
   # check files included in commit range, clear bower_components if a bower.json file has changed.
   # bower cache clearing can also be forced by putting "bower clear" or "clear bower" in a commit message
   # this logic does not work ... simply ... removed caching of bower at all
@@ -124,7 +169,7 @@ before_install:
 
 install:
   - echo "mvn $BUILD_FLAG $MODULES $PROFILE -B"
-  - mvn $BUILD_FLAG $MODULES $PROFILE -B
+  - travis_wait 30 mvn $BUILD_FLAG $MODULES $PROFILE -B
   - if [ $BUILD_PLUGINS == "true" ]; then echo "mvn clean package -pl zeppelin-plugins -amd -B"; mvn clean package -pl zeppelin-plugins -amd -B; fi
 
 before_script:
@@ -147,7 +192,7 @@ before_script:
 script:
   - if [[ -n $TEST_MODULES ]]; then export MODULES="${TEST_MODULES}"; fi
   - echo "mvn $TEST_FLAG $MODULES $PROFILE -B $TEST_PROJECTS"
-  - mvn $TEST_FLAG $MODULES $PROFILE -B $TEST_PROJECTS
+  - travis_wait 30 mvn $TEST_FLAG $MODULES $PROFILE -B $TEST_PROJECTS
 
 after_success:
   - echo "Travis exited with ${TRAVIS_TEST_RESULT}"
