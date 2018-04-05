@@ -86,9 +86,10 @@ matrix:
         - BUILD_FLAG="install -Pbuild-distr -DskipRat"
         - TEST_FLAG="verify -Pusing-packaged-distr -DskipRat"
         - MODULES="-pl ${INTERPRETERS}"
+        - PYTHONWARNINGS="ignore"
         # let's be optimistic :-)
         # - TEST_PROJECTS="-Dtests.to.exclude=**/SparkIntegrationTest.java,**/ZeppelinSparkClusterTest.java,**/org/apache/zeppelin/spark/*,**/HeliumApplicationFactoryTest.java -DfailIfNoTests=false"
-    
+
     # # Test selenium with spark module for 1.6.3
     # - jdk: "oraclejdk8"
     #   addons:
