@@ -217,8 +217,8 @@ before_install:
   # - gitlog=$(git log $TRAVIS_COMMIT_RANGE 2>/dev/null) || gitlog=""
   # - clearcache=$(echo $gitlog | grep -c -E "clear bower|bower clear" || true)
   # - if [ "$hasbowerchanged" -gt 0 ] || [ "$clearcache" -gt 0 ]; then echo "Clearing bower_components cache"; rm -r zeppelin-web/bower_components; npm cache clear; else echo "Using cached bower_components."; fi
-  - echo "MAVEN_OPTS='-Xms1024M -Xmx2048M -XX:MaxPermSize=1024m -XX:-UseGCOverheadLimit -Dorg.slf4j.simpleLogger.defaultLogLevel=warn'" >> ~/.mavenrc
-  - sed -i "s|LogLevel=warn|LogLevel=debug|" ~/.mavenrc
+  - echo "MAVEN_OPTS='-Xms1024M -Xmx2048M -XX:MaxPermSize=1024m -XX:-UseGCOverheadLimit -Dorg.slf4j.simpleLogger.defaultLogLevel=error'" >> ~/.mavenrc
+  # - sed -i "s|LogLevel=warn|LogLevel=debug|" ~/.mavenrc
   - travis_retry ./testing/install_external_dependencies.sh
   # - ls -la .spark-dist ${HOME}/.m2/repository/.cache/maven-download-plugin || true
   # - ls .node_modules && cp -r .node_modules zeppelin-web/node_modules || echo "node_modules are not cached"
@@ -248,7 +248,7 @@ before_script:
   # daemon is already started before install ...
   # - if [[ -n $TEST_MODULES ]]; then export DISPLAY=:99.0; sh -e /etc/init.d/xvfb start; sleep 3; fi
   # display info log for debugging
-  - if [[ -n $TEST_MODULES ]]; then sed -i "s|LogLevel=warn|LogLevel=debug|" ~/.mavenrc; fi
+  - if [[ -n $TEST_MODULES ]]; then sed -i "s|LogLevel=error|LogLevel=debug|" ~/.mavenrc; fi
 
 script:
   - if [[ -n $TEST_MODULES ]]; then export MODULES="${TEST_MODULES}"; fi
