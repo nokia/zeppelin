@@ -53,42 +53,42 @@ matrix:
     #     - TEST_FLAG="org.apache.rat:apache-rat-plugin:check"
     #     - TEST_PROJECTS=""
 
-    # Run e2e tests (in zeppelin-web)
-    - jdk: "oraclejdk8"
-      addons:
-        chrome: stable
-      env:
-        - DSC="Run e2e tests (in zeppelin-web)"
-        - BUILD_PLUGINS="false"
-        - CI="true"
-        - WEB_E2E="true"
-        - PYTHON="2"
-        - SCALA_VER="2.11"
-        - SPARK_VER="2.1.0"
-        - HADOOP_VER="2.6"
-        - PROFILE="-Phadoop2 -Pscala-2.11" BUILD_FLAG="package -DskipTests -DskipRat"
-        - TEST_FLAG="verify -DskipRat"
-        - MODULES="-pl ${INTERPRETERS}"
-        - TEST_MODULES="-pl zeppelin-web"
-        - TEST_PROJECTS="-Pweb-e2e"
-
-    # # Test core modules
-    # # Several tests were excluded from this configuration due to the following issues:
-    # # HeliumApplicationFactoryTest - https://issues.apache.org/jira/browse/ZEPPELIN-2470
-    # # After issues are fixed these tests need to be included back by removing them from the "-Dtests.to.exclude" property
+    # # Run e2e tests (in zeppelin-web)
     # - jdk: "oraclejdk8"
+    #   addons:
+    #     chrome: stable
     #   env:
-    #     - DSC="Test core modules"
-    #     - BUILD_PLUGINS="true"
-    #     - PYTHON="3"
-    #     - SPARKR="true"
-    #     - PROFILE="-Pspark-2.2 -Pscalding -Phelium-dev -Pexamples -Pscala-2.11"
-    #     - BUILD_FLAG="install -Pbuild-distr -DskipRat"
-    #     - TEST_FLAG="verify -Pusing-packaged-distr -DskipRat"
+    #     - DSC="Run e2e tests (in zeppelin-web)"
+    #     - BUILD_PLUGINS="false"
+    #     - CI="true"
+    #     - WEB_E2E="true"
+    #     - PYTHON="2"
+    #     - SCALA_VER="2.11"
+    #     - SPARK_VER="2.1.0"
+    #     - HADOOP_VER="2.6"
+    #     - PROFILE="-Phadoop2 -Pscala-2.11" BUILD_FLAG="package -DskipTests -DskipRat"
+    #     - TEST_FLAG="verify -DskipRat"
     #     - MODULES="-pl ${INTERPRETERS}"
-    #     # let's be optimistic :-)
-    #     # - TEST_PROJECTS="-Dtests.to.exclude=**/SparkIntegrationTest.java,**/ZeppelinSparkClusterTest.java,**/org/apache/zeppelin/spark/*,**/HeliumApplicationFactoryTest.java -DfailIfNoTests=false"
-    #
+    #     - TEST_MODULES="-pl zeppelin-web"
+    #     - TEST_PROJECTS="-Pweb-e2e"
+
+    # Test core modules
+    # Several tests were excluded from this configuration due to the following issues:
+    # HeliumApplicationFactoryTest - https://issues.apache.org/jira/browse/ZEPPELIN-2470
+    # After issues are fixed these tests need to be included back by removing them from the "-Dtests.to.exclude" property
+    - jdk: "oraclejdk8"
+      env:
+        - DSC="Test core modules"
+        - BUILD_PLUGINS="true"
+        - PYTHON="3"
+        - SPARKR="true"
+        - PROFILE="-Pspark-2.2 -Pscalding -Phelium-dev -Pexamples -Pscala-2.11"
+        - BUILD_FLAG="install -Pbuild-distr -DskipRat"
+        - TEST_FLAG="verify -Pusing-packaged-distr -DskipRat"
+        - MODULES="-pl ${INTERPRETERS}"
+        # let's be optimistic :-)
+        # - TEST_PROJECTS="-Dtests.to.exclude=**/SparkIntegrationTest.java,**/ZeppelinSparkClusterTest.java,**/org/apache/zeppelin/spark/*,**/HeliumApplicationFactoryTest.java -DfailIfNoTests=false"
+    
     # # Test selenium with spark module for 1.6.3
     # - jdk: "oraclejdk8"
     #   addons:
