@@ -143,7 +143,7 @@ public class IPythonInterpreterTest {
     interpreterResultMessages = context.out.toInterpreterResultMessage();
     assertEquals(1, interpreterResultMessages.size());
     assertEquals("你好\n", interpreterResultMessages.get(0).getData());
-    
+
     // only the last statement is printed
     context = getInterpreterContext();
     result = interpreter.interpret("'hello world'\n'hello world2'", context);
@@ -476,8 +476,14 @@ public class IPythonInterpreterTest {
     assertEquals(InterpreterResult.Code.SUCCESS, result.code());
     interpreterResultMessages = context.out.toInterpreterResultMessage();
     assertEquals(2, interpreterResultMessages.size());
-    assertEquals(InterpreterResult.Type.HTML, interpreterResultMessages.get(0).getType());
-    assertEquals(InterpreterResult.Type.IMG, interpreterResultMessages.get(1).getType());
+    int matplotlibResult = 0;
+    if (interpreterResultMessages.get(0).getType() == InterpreterResult.Type.HTML && interpreterResultMessages.get(1).getType() == InterpreterResult.Type.IMG) {
+      matplotlibResult++;
+    }
+    if (interpreterResultMessages.get(0).getType() == InterpreterResult.Type.IMG && interpreterResultMessages.get(1).getType() == InterpreterResult.Type.HTML) {
+      matplotlibResult++;
+    }
+    assertEquals(1, result);
 
     // clear output
     context = getInterpreterContext();
