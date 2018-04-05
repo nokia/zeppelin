@@ -228,7 +228,14 @@ public class IPySparkInterpreterTest {
             "ssc.start()\n" +
             "time.sleep(6)\n" +
             "ssc.stop(stopSparkContext=False, stopGraceFully=True)", context);
-    Thread.sleep(1000);
+    int retry = 10;
+    while (retry > 0) {
+      if (result.code() == InterpreterResult.Code.SUCCESS && interpreterResultMessages.size() == 1) {
+        retry = 0;
+      }
+      retry--;
+      Thread.sleep(500);
+    }
     assertEquals(InterpreterResult.Code.SUCCESS, result.code());
     interpreterResultMessages = context.out.toInterpreterResultMessage();
     assertEquals(1, interpreterResultMessages.size());
