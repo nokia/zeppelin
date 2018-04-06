@@ -208,13 +208,9 @@ matrix:
     #     - TEST_PROJECTS=""
 
 before_install:
-  - MVN_VERSION=3.5.3
-  - BASEURL=https://www-eu.apache.org/dist/maven/maven-3/MVN_VERSION/binaries/apache-maven-MVN_VERSION-bin.zip
-  - FILE=apache-maven-MVN_VERSION-bin.zip
-  - DIR=apache-maven-MVN_VERSION
-  - wget --no-check-certificate $(echo -n $BASEURL | sed -e 's#MVN_VERSION#'$MVN_VERSION'#g');
-  - unzip -qq $(echo -n $FILE | sed -e 's#MVN_VERSION#'$MVN_VERSION'#');
-  - export M2_HOME=$PWD/$(echo -n $DIR | sed -e 's#MVN_VERSION#'$MVN_VERSION'#');
+  - wget --no-check-certificate https://www-eu.apache.org/dist/maven/maven-3/3.5.3/binaries/apache-maven-3.5.3-bin.zip
+  - unzip -qq apache-maven-3.5.3-bin.zip
+  - export M2_HOME=$PWD/apache-maven-3.5.3
   - export PATH=$M2_HOME/bin:$PATH;
   - sudo apt-get update -qq;
   #
