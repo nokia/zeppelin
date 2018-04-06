@@ -228,8 +228,8 @@ before_install:
   - rm .environ
 
 install:
-  - echo "mvn $BUILD_FLAG $MODULES $PROFILE -B --offline"
-  - mvn $BUILD_FLAG $MODULES $PROFILE -B --offline
+  - echo "mvn $BUILD_FLAG $MODULES $PROFILE -B"
+  - mvn $BUILD_FLAG $MODULES $PROFILE -B
   - if [ $BUILD_PLUGINS == "true" ]; then echo "mvn clean package -pl zeppelin-plugins -amd -B"; mvn clean package -pl zeppelin-plugins -amd -B; fi
 
 before_script:
@@ -252,8 +252,8 @@ before_script:
 
 script:
   - if [[ -n $TEST_MODULES ]]; then export MODULES="${TEST_MODULES}"; fi
-  - echo "mvn -T 1C $TEST_FLAG $MODULES $PROFILE -B $TEST_PROJECTS --offline"
-  - mvn -T 1C $TEST_FLAG $MODULES $PROFILE -B $TEST_PROJECTS --offline
+  - echo "mvn -T 1C $TEST_FLAG $MODULES $PROFILE -B $TEST_PROJECTS"
+  - mvn -T 1C $TEST_FLAG $MODULES $PROFILE -B $TEST_PROJECTS
 
 after_success:
   - echo "Travis exited with ${TRAVIS_TEST_RESULT}"
