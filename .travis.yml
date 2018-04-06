@@ -208,11 +208,12 @@ matrix:
     #     - TEST_PROJECTS=""
 
 before_install:
+  - mvn --version
   - wget --no-check-certificate https://www-eu.apache.org/dist/maven/maven-3/3.5.3/binaries/apache-maven-3.5.3-bin.zip
   - unzip -qq apache-maven-3.5.3-bin.zip
   - export M2_HOME=$PWD/apache-maven-3.5.3
-  - export PATH=$M2_HOME/bin:$PATH;
-  - sudo apt-get update -qq;
+  - export PATH=$M2_HOME/bin:$PATH
+  - mvn --version
   #
   - sudo apt-get update
   # check files included in commit range, clear bower_components if a bower.json file has changed.
