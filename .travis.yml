@@ -252,8 +252,8 @@ before_script:
 
 script:
   - if [[ -n $TEST_MODULES ]]; then export MODULES="${TEST_MODULES}"; fi
-  - echo "mvn -T 1C $TEST_FLAG $MODULES $PROFILE -B $TEST_PROJECTS"
-  - mvn -T 1C $TEST_FLAG $MODULES $PROFILE -B $TEST_PROJECTS
+  - echo "mvn -T 1C $TEST_FLAG $MODULES $PROFILE -B $TEST_PROJECTS --offline"
+  - mvn -T 1C $TEST_FLAG $MODULES $PROFILE -B $TEST_PROJECTS --offline
 
 after_success:
   - echo "Travis exited with ${TRAVIS_TEST_RESULT}"
