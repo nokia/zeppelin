@@ -208,6 +208,16 @@ matrix:
     #     - TEST_PROJECTS=""
 
 before_install:
+  - MVN_VERSION=3.5.3
+  - BASEURL=https://www-eu.apache.org/dist/maven/maven-3/VERSION/binaries/apache-maven-MVN_VERSION-bin.zip
+  - FILE=apache-maven-MVN_VERSION-bin.zip
+  - DIR=apache-maven-MVN_VERSION
+  - wget --no-check-certificate $(echo -n $BASEURL | sed -e 's#MVN_VERSION#'$MVN_VERSION'#g');
+  - unzip -qq $(echo -n $FILE | sed -e 's#MVN_VERSION#'$MVN_VERSION'#');
+  - export M2_HOME=$PWD/$(echo -n $DIR | sed -e 's#MVN_VERSION#'$MVN_VERSION'#');
+  - export PATH=$M2_HOME/bin:$PATH;
+  - sudo apt-get update -qq;
+  #
   - sudo apt-get update
   # check files included in commit range, clear bower_components if a bower.json file has changed.
   # bower cache clearing can also be forced by putting "bower clear" or "clear bower" in a commit message
