@@ -50,68 +50,30 @@ touch .environ
 
 if [[ -n "$PYTHON" ]] ; then
 
-  # pip install -q requests==2.5.3 virtualenv==13.1.2
-  # Dependencies for installing Python
-  # apt-get install build-essential
-  # apt-get install libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
-
-  # to be refactored ...
   if [[ "$PYTHON" == "2" ]] ; then
-    # Download Python 2.7.9 and extract
-    # cd $HOME
-    # wget --quiet https://www.python.org/ftp/python/2.7.9/Python-2.7.9.tgz
-    # tar -xf Python-2.7.9.tgz
-    #
-    # # Install Python 2.7.9
-    # cd $HOME/Python-2.7.9
-    # ./configure > /dev/null 2> /dev/null
-    # make -j2 build_all > /dev/null 2> /dev/null
-    # make install
-
-    # export PYENV_VERSION='2.7.13'
-    # # export PYENV_VERSION_STRING='Python 2.7.13'
-    #
-    # export PYENV_ROOT='~/.travis-pyenv'
-    # export PYENV_CACHE_PATH='~/.pyenv_cache'
-    #
-    #
-    # if [[ -n "$PYENV_VERSION" ]]; then
-    #   wget https://github.com/praekeltfoundation/travis-pyenv/releases/download/0.4.0/setup-pyenv.sh
-    #   source setup-pyenv.sh
-    # fi
 
     pyenv install "2.7.13"
     pyenv global "2.7.13"
 
-    pip install -U virtualenv
+    pip install --quiet -U virtualenv
 
     python --version
 
-    # export PYTHON_EXEC=$HOME/Python-2.7.9/python
-
-    # export PYTHON_EXEC=/usr/bin/python2.7
   fi
 
-  # if [[ "$PYTHON" == "3" ]] ; then
-  #   # Download python 3.4.3 and extract
-  #   cd $HOME
-  #   wget --quiet https://www.python.org/ftp/python/3.4.3/Python-3.4.3.tgz
-  #   tar -xf Python-3.4.3.tgz
-  #
-  #   # Install Python 3.4.3
-  #   cd $HOME/Python-3.4.3
-  #   ./configure --prefix=$HOME/Python-3.4.3 > /dev/null 2> /dev/null
-  #   make -j2 build_all > /dev/null 2> /dev/null
-  #
-  #   export PYTHON_EXEC=$HOME/Python-2.4.3/python
-  # fi
+  if [[ "$PYTHON" == "3" ]] ; then
 
-  # mkdir -p ${HOME}/zeppelin
-  # cd ${HOME}
-  # virtualenv --python=$PYTHON_EXEC zeppelin
-  # source ${HOME}/zeppelin/bin/activate
+    pyenv install "3.5.3"
+    pyenv global "3.5.3"
 
-  pip install setuptools grpcio bkzep python-Levenshtein==0.12.0 cython==0.26.1 numpy==1.13.1 pandas==0.20.3 matplotlib==2.0.2 sympy==1.1.1 py4j==0.10.6 pattern==2.6 scipy==0.19.1 nltk==3.2.4 gensim==2.3.0 sklearn==0.0 stemming==1.0.1 ggplot==0.11.5 fuzzywuzzy==0.15.1 boto==2.48.0
+    pip install --quiet -U virtualenv
+
+    python --version
+
+  fi
+
+  # check if we can install less modules ...
+  pip install --quiet setuptools grpcio bkzep python-Levenshtein==0.12.0 cython==0.26.1 numpy==1.13.1 pandas==0.20.3 matplotlib==2.0.2 sympy==1.1.1 py4j==0.10.6 pattern==2.6 scipy==0.19.1 nltk==3.2.4 gensim==2.3.0 sklearn==0.0 stemming==1.0.1 ggplot==0.11.5 fuzzywuzzy==0.15.1 boto==2.48.0
 else
   mkdir -p ${HOME}/zeppelin/bin
   touch ${HOME}/zeppelin/bin/activate
