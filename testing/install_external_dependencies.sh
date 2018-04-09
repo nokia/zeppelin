@@ -50,7 +50,7 @@ touch .environ
 
 if [[ -n "$PYTHON" ]] ; then
 
-  pip install -q virtualenv==13.1.2
+  pip install -q requests==2.5.3 virtualenv==13.1.2
   # Dependencies for installing Python
   # apt-get install build-essential
   # apt-get install libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
