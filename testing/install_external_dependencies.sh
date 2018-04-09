@@ -48,10 +48,9 @@ touch .environ
 #   pip install -q grpcio ggplot bkzep==0.4.0 python-Levenshtein==0.12.0
 # fi
 
-pip install -q virtualenv=13.1.2
-
 if [[ -n "$PYTHON" ]] ; then
 
+  pip install -q virtualenv==13.1.2
   # Dependencies for installing Python
   # apt-get install build-essential
   # apt-get install libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
