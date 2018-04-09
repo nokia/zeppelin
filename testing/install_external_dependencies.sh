@@ -20,30 +20,30 @@
 set -ev
 touch .environ
 
-# Install R dependencies if SPARKR is true
-if [[ "${SPARKR}" = "true" ]] ; then
-  echo "export R_LIBS=~/R" >> .environ
-  source .environ
-  if [[ ! -d "$HOME/R/knitr" ]] ; then
-    mkdir -p ~/R
-    R -e "install.packages('evaluate', repos = 'http://cran.us.r-project.org', lib='~/R')"  > /dev/null 2>&1
-    R -e "install.packages('base64enc', repos = 'http://cran.us.r-project.org', lib='~/R')"  > /dev/null 2>&1
-    R -e "install.packages('knitr', repos = 'http://cran.us.r-project.org', lib='~/R')"  > /dev/null 2>&1
-    R -e "install.packages('ggplot2', repos = 'http://cran.us.r-project.org', lib='~/R')"  > /dev/null 2>&1
-  fi
-fi
-
-# Install Python dependencies for Python specific tests
-if [[ -n "$PYTHON" ]] ; then
-  wget https://repo.continuum.io/miniconda/Miniconda${PYTHON}-4.2.12-Linux-x86_64.sh -O miniconda.sh
-  bash miniconda.sh -b -p $HOME/miniconda
-  echo "export PATH='$HOME/miniconda/bin:$PATH'" >> .environ
-  source .environ
-  hash -r
-  conda config --set always_yes yes --set changeps1 no
-  conda update -q conda
-  conda info -a
-  conda config --add channels conda-forge
-  conda install -q matplotlib=2.1.2 pandasql ipython=5.4.1 jupyter_client ipykernel matplotlib bokeh=0.12.10
-  pip install -q grpcio ggplot bkzep==0.4.0 python-Levenshtein==0.12.0
-fi
+# # Install R dependencies if SPARKR is true
+# if [[ "${SPARKR}" = "true" ]] ; then
+#   echo "export R_LIBS=~/R" >> .environ
+#   source .environ
+#   if [[ ! -d "$HOME/R/knitr" ]] ; then
+#     mkdir -p ~/R
+#     R -e "install.packages('evaluate', repos = 'http://cran.us.r-project.org', lib='~/R')"  > /dev/null 2>&1
+#     R -e "install.packages('base64enc', repos = 'http://cran.us.r-project.org', lib='~/R')"  > /dev/null 2>&1
+#     R -e "install.packages('knitr', repos = 'http://cran.us.r-project.org', lib='~/R')"  > /dev/null 2>&1
+#     R -e "install.packages('ggplot2', repos = 'http://cran.us.r-project.org', lib='~/R')"  > /dev/null 2>&1
+#   fi
+# fi
+#
+# # Install Python dependencies for Python specific tests
+# if [[ -n "$PYTHON" ]] ; then
+#   wget https://repo.continuum.io/miniconda/Miniconda${PYTHON}-4.2.12-Linux-x86_64.sh -O miniconda.sh
+#   bash miniconda.sh -b -p $HOME/miniconda
+#   echo "export PATH='$HOME/miniconda/bin:$PATH'" >> .environ
+#   source .environ
+#   hash -r
+#   conda config --set always_yes yes --set changeps1 no
+#   conda update -q conda
+#   conda info -a
+#   conda config --add channels conda-forge
+#   conda install -q matplotlib=2.1.2 pandasql ipython=5.4.1 jupyter_client ipykernel matplotlib bokeh=0.12.10
+#   pip install -q grpcio ggplot bkzep==0.4.0 python-Levenshtein==0.12.0
+# fi

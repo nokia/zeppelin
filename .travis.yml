@@ -17,23 +17,12 @@ language: java
 
 dist: trusty
 sudo: false
-# sudo: required
 
 cache:
   apt: true
   directories:
-    - .spark-dist
     - ${HOME}/.m2
     - ${HOME}/R
-    - zeppelin-web/node
-    - zeppelin-web/node_modules
-
-addons:
-  apt:
-    sources:
-    - r-packages-trusty
-    packages:
-    - r-base-dev
 
 env:
   global:
@@ -42,189 +31,23 @@ env:
 
 matrix:
   include:
-    # # Test License compliance using RAT tool
-    # - jdk: "oraclejdk8"
-    #   env:
-    #     - DSC="Test License compliance using RAT tool"
-    #     - BUILD_PLUGINS="false"
-    #     - SCALA_VER="2.11"
-    #     - PROFILE="-Prat"
-    #     - BUILD_FLAG="clean"
-    #     - TEST_FLAG="org.apache.rat:apache-rat-plugin:check"
-    #     - TEST_PROJECTS=""
-
-    # # Run e2e tests (in zeppelin-web)
-    # - jdk: "oraclejdk8"
-    #   addons:
-    #     chrome: stable
-    #   env:
-    #     - DSC="Run e2e tests (in zeppelin-web)"
-    #     - BUILD_PLUGINS="false"
-    #     - CI="true"
-    #     - WEB_E2E="true"
-    #     - PYTHON="2"
-    #     - SCALA_VER="2.11"
-    #     - SPARK_VER="2.1.0"
-    #     - HADOOP_VER="2.6"
-    #     - PROFILE="-Phadoop2 -Pscala-2.11" BUILD_FLAG="package -DskipTests -DskipRat"
-    #     - TEST_FLAG="verify -DskipRat"
-    #     - MODULES="-pl ${INTERPRETERS}"
-    #     - TEST_MODULES="-pl zeppelin-web"
-    #     - TEST_PROJECTS="-Pweb-e2e"
-
-    # Test core modules
-    # Several tests were excluded from this configuration due to the following issues:
-    # HeliumApplicationFactoryTest - https://issues.apache.org/jira/browse/ZEPPELIN-2470
-    # After issues are fixed these tests need to be included back by removing them from the "-Dtests.to.exclude" property
-    - sudo: required
-      jdk: "oraclejdk8"
+    # Test License compliance using RAT tool
+    - jdk: "oraclejdk8"
       env:
-        - DSC="Test core modules"
-        - BUILD_PLUGINS="true"
-        - PYTHON="3"
-        - SPARKR="true"
-        - PROFILE="-Pspark-2.2 -Pscalding -Phelium-dev -Pexamples -Pscala-2.11"
-        - BUILD_FLAG="install -Pbuild-distr -DskipRat"
-        - TEST_FLAG="verify -Pusing-packaged-distr -DskipRat"
-        - MODULES="-pl ${INTERPRETERS}"
-        - PYTHONWARNINGS="ignore"
-        - TEST_PROJECTS="-Dtests.to.exclude=**/SparkIntegrationTest.java,**/ZeppelinSparkClusterTest.java,**/org/apache/zeppelin/spark/*,**/HeliumApplicationFactoryTest.java -DfailIfNoTests=false"
+        - DSC="Test License compliance using RAT tool"
+        - BUILD_PLUGINS="false"
+        - SCALA_VER="2.11"
+        - PROFILE="-Prat"
+        - BUILD_FLAG="clean"
+        - TEST_FLAG="org.apache.rat:apache-rat-plugin:check"
+        - TEST_PROJECTS=""
 
-    # # Test selenium with spark module for 1.6.3
-    # - jdk: "oraclejdk8"
-    #   addons:
-    #     firefox: latest
-    #   env:
-    #     - DSC="Test selenium with spark module for 1.6.3"
-    #     - BUILD_PLUGINS="true"
-    #     - CI="true"
-    #     - PYTHON="2"
-    #     - SCALA_VER="2.10"
-    #     - SPARK_VER="1.6.3"
-    #     - HADOOP_VER="2.6"
-    #     - PROFILE="-Pspark-1.6 -Phadoop2 -Phadoop-2.6 -Phelium-dev -Pexamples -Pintegration"
-    #     - BUILD_FLAG="install -DskipTests -DskipRat"
-    #     - TEST_FLAG="verify -DskipRat"
-    #     - TEST_PROJECTS="-pl .,zeppelin-integration" # too much error prone ... -DfailIfNoTests=false"
-    #     - MOZ_HEADLESS=1
-    #
-    # # Test interpreter modules
-    # - jdk: "openjdk7"
-    #   env:
-    #     - DSC="Test interpreter modules"
-    #     - BUILD_PLUGINS="false"
-    #     - PYTHON="3"
-    #     - SCALA_VER="2.10"
-    #     - PROFILE="-Pscalding"
-    #     - BUILD_FLAG="package -DskipTests -DskipRat -Pr"
-    #     - TEST_FLAG="test -DskipRat"
-    #     - MODULES="-pl $(echo .,zeppelin-interpreter,${INTERPRETERS} | sed 's/!//g')"
-    #     - TEST_PROJECTS=""
-    #
-    # # Run ZeppelinSparkClusterTest & SparkIntegrationTest in one build would exceed the time limitation of travis, so running them separately
-    #
-    # # Integration test of spark interpreter with different spark versions under python2, only run ZeppelinSparkClusterTest. Also run spark unit test of spark 2.2 in this build.
-    # - jdk: "oraclejdk8"
-    #   env:
-    #     - DSC="IT spark interpreter with python2 ONLY ZeppelinSparkClusterTest + spark 2.2 unit tests"
-    #     - BUILD_PLUGINS="true"
-    #     - PYTHON="2"
-    #     - PROFILE="-Pspark-2.2"
-    #     - SPARKR="true"
-    #     - BUILD_FLAG="install -DskipTests -DskipRat -am"
-    #     - TEST_FLAG="test -DskipRat -am"
-    #     - MODULES="-pl zeppelin-zengine,zeppelin-server,spark/interpreter,spark/spark-dependencies"
-    #     - TEST_PROJECTS="-Dtest=ZeppelinSparkClusterTest,org.apache.zeppelin.spark.* -DfailIfNoTests=false"
-    #
-    # # Integration test of spark interpreter with different spark versions under python3, only run SparkIntegrationTest. Also run spark unit test of spark 1.6 in this build.
-    # - jdk: "oraclejdk8"
-    #   env:
-    #     - DSC="IT spark interpreter with python3 ONLY SparkIntegrationTest + spark 1.6 unit tests"
-    #     - BUILD_PLUGINS="true"
-    #     - PYTHON="3"
-    #     - PROFILE="-Pspark-1.6"
-    #     - SPARKR="true"
-    #     - BUILD_FLAG="install -DskipTests -DskipRat -am"
-    #     - TEST_FLAG="test -DskipRat -am"
-    #     - MODULES="-pl zeppelin-zengine,spark/interpreter,spark/spark-dependencies"
-    #     - TEST_PROJECTS="-Dtest=SparkIntegrationTest,org.apache.zeppelin.spark.* -DfailIfNoTests=false"
-    #
-    # # Test spark module for 2.1.0 with scala 2.11
-    # - jdk: "openjdk7"
-    #   env:
-    #     - DSC="Test spark module for 2.1.0 with scala 2.11"
-    #     - BUILD_PLUGINS="false"
-    #     - PYTHON="2"
-    #     - SCALA_VER="2.11"
-    #     - PROFILE="-Pspark-2.1 -Phadoop2 -Pscala-2.11"
-    #     - SPARKR="true"
-    #     - BUILD_FLAG="package -DskipTests -DskipRat -am"
-    #     - TEST_FLAG="test -DskipRat -am"
-    #     - MODULES="-pl spark/interpreter,spark/spark-dependencies"
-    #     - TEST_PROJECTS="-Dtest=org.apache.zeppelin.spark.* -DfailIfNoTests=false"
-    #
-    # # Test spark module for 2.0.2 with scala 2.11
-    # - jdk: "oraclejdk8"
-    #   env:
-    #     - DSC="Test spark module for 2.0.2 with scala 2.11"
-    #     - BUILD_PLUGINS="false"
-    #     - PYTHON="2"
-    #     - SCALA_VER="2.11"
-    #     - PROFILE="-Pspark-2.0 -Phadoop3 -Pscala-2.11"
-    #     - SPARKR="true"
-    #     - BUILD_FLAG="package -DskipTests -DskipRat -am"
-    #     - TEST_FLAG="test -DskipRat -am"
-    #     - MODULES="-pl spark/interpreter,spark/spark-dependencies"
-    #     - TEST_PROJECTS="-Dtest=org.apache.zeppelin.spark.* -DfailIfNoTests=false"
-    #
-    # # Test python/pyspark with python 2, livy 0.5
-    # - jdk: "openjdk7"
-    #   env:
-    #     - DSC="Test python/pyspark with python 2, livy 0.5"
-    #     - BUILD_PLUGINS="false"
-    #     - PYTHON="2"
-    #     - SPARK_VER="1.6.3"
-    #     - HADOOP_VER="2.6"
-    #     - LIVY_VER="0.5.0-incubating"
-    #     - PROFILE=""
-    #     - BUILD_FLAG="install -am -DskipTests -DskipRat"
-    #     - TEST_FLAG="verify -DskipRat"
-    #     - MODULES="-pl livy"
-    #     - TEST_PROJECTS=""
-    #
-    # # Test livy 0.5 with spark 2.2.0 under python3
-    # - jdk: "openjdk8"
-    #   env:
-    #     - DSC="Test livy 0.5 with spark 2.2.0 under python3"
-    #     - BUILD_PLUGINS="false"
-    #     - PYTHON="3"
-    #     - SPARK_VER="2.2.0"
-    #     - HADOOP_VER="2.6"
-    #     - LIVY_VER="0.5.0-incubating"
-    #     - PROFILE=""
-    #     - BUILD_FLAG="install -am -DskipTests -DskipRat"
-    #     - TEST_FLAG="verify -DskipRat"
-    #     - MODULES="-pl livy"
-    #     - TEST_PROJECTS=""
 
 before_install:
-  - sudo apt-get update
-  # check files included in commit range, clear bower_components if a bower.json file has changed.
-  # bower cache clearing can also be forced by putting "bower clear" or "clear bower" in a commit message
-  # this logic does not work ... simply ... removed caching of bower at all
-  # - changedfiles=$(git diff --name-only $TRAVIS_COMMIT_RANGE 2>/dev/null) || changedfiles=""
-  # - echo $changedfiles
-  # - hasbowerchanged=$(echo $changedfiles | grep -c "bower.json" || true);
-  # - gitlog=$(git log $TRAVIS_COMMIT_RANGE 2>/dev/null) || gitlog=""
-  # - clearcache=$(echo $gitlog | grep -c -E "clear bower|bower clear" || true)
-  # - if [ "$hasbowerchanged" -gt 0 ] || [ "$clearcache" -gt 0 ]; then echo "Clearing bower_components cache"; rm -r zeppelin-web/bower_components; npm cache clear; else echo "Using cached bower_components."; fi
-  - echo "MAVEN_OPTS='-XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Xms1024M -Xmx2048M -XX:MaxPermSize=1024m -XX:-UseGCOverheadLimit -Dorg.slf4j.simpleLogger.defaultLogLevel=error'" >> ~/.mavenrc
-  # - sed -i "s|LogLevel=warn|LogLevel=debug|" ~/.mavenrc
+  - echo "MAVEN_OPTS='-XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Xms1024M -Xmx2048M -XX:MaxPermSize=1024m -XX:-UseGCOverheadLimit -Dorg.slf4j.simpleLogger.defaultLogLevel=info'" >> ~/.mavenrc
   - travis_wait 30 travis_retry ./testing/install_external_dependencies.sh
-  # - ls -la .spark-dist ${HOME}/.m2/repository/.cache/maven-download-plugin || true
-  # - ls .node_modules && cp -r .node_modules zeppelin-web/node_modules || echo "node_modules are not cached"
   - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1600x1024x16"
-  #- ./dev/change_scala_version.sh $SCALA_VER
+  - export DISPLAY=:99.0
   - source .environ
   - rm .environ
 
@@ -235,32 +58,20 @@ install:
 
 before_script:
   - if [[ -n $SPARK_VER ]]; then travis_retry ./testing/downloadSpark.sh $SPARK_VER $HADOOP_VER; fi
-  - if [[ -n $LIVY_VER ]]; then ./testing/downloadLivy.sh $LIVY_VER; fi
-  - if [[ -n $LIVY_VER ]]; then export LIVY_HOME=`pwd`/livy-$LIVY_VER-bin; fi
-  - if [[ -n $LIVY_VER ]]; then export SPARK_HOME=`pwd`/spark-$SPARK_VER-bin-hadoop$HADOOP_VER; fi
   - if [[ -n $SPARK_VER ]]; then export SPARK_HOME=`pwd`/spark-$SPARK_VER-bin-hadoop$HADOOP_VER; fi
   - if [[ -n $SPARK_VER ]]; then echo "export SPARK_HOME=`pwd`/spark-$SPARK_VER-bin-hadoop$HADOOP_VER" > conf/zeppelin-env.sh; fi
+  - if [[ -n $LIVY_VER ]]; then ./testing/downloadLivy.sh $LIVY_VER; fi
+  - if [[ -n $LIVY_VER ]]; then export LIVY_HOME=`pwd`/livy-$LIVY_VER-bin; fi
   - echo "export ZEPPELIN_HELIUM_REGISTRY=helium" >> conf/zeppelin-env.sh
   - echo "export SPARK_PRINT_LAUNCH_COMMAND=true" >> conf/zeppelin-env.sh
-  - export SPARK_PRINT_LAUNCH_COMMAND=true
   - tail conf/zeppelin-env.sh
-  # https://docs.travis-ci.com/user/gui-and-headless-browsers/#Using-xvfb-to-Run-Tests-That-Require-a-GUI
-  - export DISPLAY=:99.0
-  # daemon is already started before install ...
-  # - if [[ -n $TEST_MODULES ]]; then export DISPLAY=:99.0; sh -e /etc/init.d/xvfb start; sleep 3; fi
-  # display info log for debugging
-  # too much verbose break travis - if [[ -n $TEST_MODULES ]]; then sed -i "s|LogLevel=error|LogLevel=debug|" ~/.mavenrc; fi
 
 script:
   - if [[ -n $TEST_MODULES ]]; then export MODULES="${TEST_MODULES}"; fi
   - echo "mvn -T 1C $TEST_FLAG $MODULES $PROFILE -B $TEST_PROJECTS"
   - mvn -T 1C $TEST_FLAG $MODULES $PROFILE -B $TEST_PROJECTS
 
-after_success:
-  - echo "Travis exited with ${TRAVIS_TEST_RESULT}"
-
 after_failure:
-  - echo "Travis exited with ${TRAVIS_TEST_RESULT}"
   - find . -name rat.txt | xargs cat
   - cat logs/*
   - cat zeppelin-distribution/target/zeppelin-*-SNAPSHOT/zeppelin-*-SNAPSHOT/logs/zeppelin*.log
