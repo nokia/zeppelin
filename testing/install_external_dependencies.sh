@@ -63,8 +63,8 @@ if [[ -n "$PYTHON" ]] ; then
 
     # Install Python 2.7.9
     cd $HOME/Python-2.7.9
-    ./configure
-    make build_all
+    ./configure > /dev/null 2> /dev/null
+    make -j2 build_all
 
     export PYTHON_EXEC=$HOME/Python-2.7.9/bin/python
   fi
@@ -77,8 +77,8 @@ if [[ -n "$PYTHON" ]] ; then
 
     # Install Python 3.4.3
     cd $HOME/Python-3.4.3
-    ./configure
-    make build_all
+    ./configure > /dev/null 2> /dev/null
+    make -j2 build_all
 
     export PYTHON_EXEC=$HOME/Python-2.4.3/bin/python
   fi
