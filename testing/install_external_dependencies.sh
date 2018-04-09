@@ -69,7 +69,7 @@ if [[ -n "$PYTHON" ]] ; then
     # make install
 
     export PYENV_VERSION='2.7.13'
-    export PYENV_VERSION_STRING='Python 2.7.13'
+    # export PYENV_VERSION_STRING='Python 2.7.13'
 
     export PYENV_ROOT='~/.travis-pyenv'
     export PYENV_CACHE_PATH='~/.pyenv_cache'
@@ -80,7 +80,9 @@ if [[ -n "$PYTHON" ]] ; then
       source setup-pyenv.sh
     fi
 
-    export PYTHON_EXEC=$HOME/Python-2.7.9/python
+    python --version
+
+    # export PYTHON_EXEC=$HOME/Python-2.7.9/python
 
     # export PYTHON_EXEC=/usr/bin/python2.7
   fi
