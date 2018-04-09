@@ -48,6 +48,7 @@ touch .environ
 #   pip install -q grpcio ggplot bkzep==0.4.0 python-Levenshtein==0.12.0
 # fi
 
+pip install -q virtualenv=13.1.2
 
 if [[ -n "$PYTHON" ]] ; then
 

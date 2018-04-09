@@ -58,7 +58,6 @@ matrix:
             - libc6-dev
             - libbz2-dev
             - python-pip
-            - python-virtualenv
       env:
         - DSC="Run e2e tests (in zeppelin-web)"
         - BUILD_PLUGINS="false"
