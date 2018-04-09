@@ -64,9 +64,9 @@ if [[ -n "$PYTHON" ]] ; then
     # Install Python 2.7.9
     cd $HOME/Python-2.7.9
     ./configure > /dev/null 2> /dev/null
-    make -j2 build_all
+    make -j2 build_all > /dev/null 2> /dev/null
 
-    export PYTHON_EXEC=$HOME/Python-2.7.9/bin/python
+    export PYTHON_EXEC=$HOME/Python-2.7.9/python
   fi
 
   if [[ "$PYTHON" == "3" ]] ; then
@@ -78,9 +78,9 @@ if [[ -n "$PYTHON" ]] ; then
     # Install Python 3.4.3
     cd $HOME/Python-3.4.3
     ./configure > /dev/null 2> /dev/null
-    make -j2 build_all
+    make -j2 build_all > /dev/null 2> /dev/null
 
-    export PYTHON_EXEC=$HOME/Python-2.4.3/bin/python
+    export PYTHON_EXEC=$HOME/Python-2.4.3/python
   fi
 
   mkdir -p ${HOME}/zeppelin
