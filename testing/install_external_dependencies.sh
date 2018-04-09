@@ -55,6 +55,7 @@ if [[ -n "$PYTHON" ]] ; then
   # apt-get install build-essential
   # apt-get install libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
 
+  # to be refactored ...
   if [[ "$PYTHON" == "2" ]] ; then
     # Download Python 2.7.9 and extract
     cd $HOME
@@ -63,7 +64,7 @@ if [[ -n "$PYTHON" ]] ; then
 
     # Install Python 2.7.9
     cd $HOME/Python-2.7.9
-    ./configure > /dev/null 2> /dev/null
+    ./configure --prefix=$HOME/Python-2.7.9 > /dev/null 2> /dev/null
     make -j2 build_all > /dev/null 2> /dev/null
 
     export PYTHON_EXEC=$HOME/Python-2.7.9/python
@@ -77,7 +78,7 @@ if [[ -n "$PYTHON" ]] ; then
 
     # Install Python 3.4.3
     cd $HOME/Python-3.4.3
-    ./configure > /dev/null 2> /dev/null
+    ./configure --prefix=$HOME/Python-3.4.3 > /dev/null 2> /dev/null
     make -j2 build_all > /dev/null 2> /dev/null
 
     export PYTHON_EXEC=$HOME/Python-2.4.3/python
