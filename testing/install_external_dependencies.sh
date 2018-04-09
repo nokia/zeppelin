@@ -58,14 +58,13 @@ if [[ -n "$PYTHON" ]] ; then
   if [[ "$PYTHON" == "2" ]] ; then
     # Download Python 2.7.9 and extract
     cd $HOME
-    wget https://www.python.org/ftp/python/2.7.9/Python-2.7.9.tgz
-    tar -xvf Python-2.7.9.tgz
+    wget --quiet https://www.python.org/ftp/python/2.7.9/Python-2.7.9.tgz
+    tar -xf Python-2.7.9.tgz
 
     # Install Python 2.7.9
     cd $HOME/Python-2.7.9
     ./configure
-    make
-    sudo make install
+    make build_all
 
     export PYTHON_EXEC=$HOME/Python-2.7.9/bin/python
   fi
@@ -73,14 +72,13 @@ if [[ -n "$PYTHON" ]] ; then
   if [[ "$PYTHON" == "3" ]] ; then
     # Download python 3.4.3 and extract
     cd $HOME
-    wget https://www.python.org/ftp/python/3.4.3/Python-3.4.3.tgz
-    tar -xvf Python-3.4.3.tgz
+    wget --quiet https://www.python.org/ftp/python/3.4.3/Python-3.4.3.tgz
+    tar -xf Python-3.4.3.tgz
 
     # Install Python 3.4.3
     cd $HOME/Python-3.4.3
     ./configure
-    make
-    sudo make install
+    make build_all
 
     export PYTHON_EXEC=$HOME/Python-2.4.3/bin/python
   fi
