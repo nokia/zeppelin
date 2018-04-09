@@ -50,7 +50,7 @@ touch .environ
 
 if [[ -n "$PYTHON" ]] ; then
 
-  pip install -q requests==2.5.3 virtualenv==13.1.2
+  # pip install -q requests==2.5.3 virtualenv==13.1.2
   # Dependencies for installing Python
   # apt-get install build-essential
   # apt-get install libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
@@ -58,16 +58,18 @@ if [[ -n "$PYTHON" ]] ; then
   # to be refactored ...
   if [[ "$PYTHON" == "2" ]] ; then
     # Download Python 2.7.9 and extract
-    cd $HOME
-    wget --quiet https://www.python.org/ftp/python/2.7.9/Python-2.7.9.tgz
-    tar -xf Python-2.7.9.tgz
+    # cd $HOME
+    # wget --quiet https://www.python.org/ftp/python/2.7.9/Python-2.7.9.tgz
+    # tar -xf Python-2.7.9.tgz
+    #
+    # # Install Python 2.7.9
+    # cd $HOME/Python-2.7.9
+    # ./configure --prefix=$HOME/Python-2.7.9 > /dev/null 2> /dev/null
+    # make -j2 build_all > /dev/null 2> /dev/null
+    #
+    # export PYTHON_EXEC=$HOME/Python-2.7.9/python
 
-    # Install Python 2.7.9
-    cd $HOME/Python-2.7.9
-    ./configure --prefix=$HOME/Python-2.7.9 > /dev/null 2> /dev/null
-    make -j2 build_all > /dev/null 2> /dev/null
-
-    export PYTHON_EXEC=$HOME/Python-2.7.9/python
+    export PYTHON_EXEC=/usr/bin/python2.7
   fi
 
   # if [[ "$PYTHON" == "3" ]] ; then
