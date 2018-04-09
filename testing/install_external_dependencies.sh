@@ -58,15 +58,23 @@ if [[ -n "$PYTHON" ]] ; then
   # to be refactored ...
   if [[ "$PYTHON" == "2" ]] ; then
     # Download Python 2.7.9 and extract
-    cd $HOME
-    wget --quiet https://www.python.org/ftp/python/2.7.9/Python-2.7.9.tgz
-    tar -xf Python-2.7.9.tgz
+    # cd $HOME
+    # wget --quiet https://www.python.org/ftp/python/2.7.9/Python-2.7.9.tgz
+    # tar -xf Python-2.7.9.tgz
+    #
+    # # Install Python 2.7.9
+    # cd $HOME/Python-2.7.9
+    # ./configure > /dev/null 2> /dev/null
+    # make -j2 build_all > /dev/null 2> /dev/null
+    # make install
 
-    # Install Python 2.7.9
-    cd $HOME/Python-2.7.9
-    ./configure > /dev/null 2> /dev/null
-    make -j2 build_all > /dev/null 2> /dev/null
-    make install
+    export PYENV_VERSION='2.7.13'
+    export PYENV_VERSION_STRING='Python 2.7.13'
+
+    if [[ -n "$PYENV_VERSION" ]]; then
+      wget https://github.com/praekeltfoundation/travis-pyenv/releases/download/0.4.0/setup-pyenv.sh
+      source setup-pyenv.sh
+    fi
 
     export PYTHON_EXEC=$HOME/Python-2.7.9/python
 
@@ -87,10 +95,11 @@ if [[ -n "$PYTHON" ]] ; then
   #   export PYTHON_EXEC=$HOME/Python-2.4.3/python
   # fi
 
-  mkdir -p ${HOME}/zeppelin
-  cd ${HOME}
-  virtualenv --python=$PYTHON_EXEC zeppelin
-  source ${HOME}/zeppelin/bin/activate
+  # mkdir -p ${HOME}/zeppelin
+  # cd ${HOME}
+  # virtualenv --python=$PYTHON_EXEC zeppelin
+  # source ${HOME}/zeppelin/bin/activate
+  
   pip install setuptools grpcio bkzep python-Levenshtein==0.12.0 cython==0.26.1 numpy==1.13.1 pandas==0.20.3 matplotlib==2.0.2 sympy==1.1.1 py4j==0.10.6 pattern==2.6 scipy==0.19.1 nltk==3.2.4 gensim==2.3.0 sklearn==0.0 stemming==1.0.1 ggplot==0.11.5 fuzzywuzzy==0.15.1 boto==2.48.0
 else
   mkdir -p ${HOME}/zeppelin/bin

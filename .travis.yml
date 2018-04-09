@@ -23,6 +23,7 @@ cache:
   directories:
     - ${HOME}/.m2
     - ${HOME}/R
+    - $HOME/.pyenv_cache
 
 env:
   global:
