@@ -46,11 +46,11 @@ matrix:
     - jdk: "oraclejdk8"
       addons:
         chrome: stable
-          apt:
-            packages:
-              - python
-              - python-devel
-              - python-pip
+        apt:
+          packages:
+            - python
+            - python-devel
+            - python-pip
       env:
         - DSC="Run e2e tests (in zeppelin-web)"
         - BUILD_PLUGINS="false"
