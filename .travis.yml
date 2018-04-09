@@ -49,7 +49,7 @@ matrix:
         apt:
           packages:
             - python
-            - python-devel
+            - python-dev
             - python-pip
       env:
         - DSC="Run e2e tests (in zeppelin-web)"
