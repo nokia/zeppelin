@@ -68,17 +68,22 @@ if [[ -n "$PYTHON" ]] ; then
     # make -j2 build_all > /dev/null 2> /dev/null
     # make install
 
-    export PYENV_VERSION='2.7.13'
-    # export PYENV_VERSION_STRING='Python 2.7.13'
+    # export PYENV_VERSION='2.7.13'
+    # # export PYENV_VERSION_STRING='Python 2.7.13'
+    #
+    # export PYENV_ROOT='~/.travis-pyenv'
+    # export PYENV_CACHE_PATH='~/.pyenv_cache'
+    #
+    #
+    # if [[ -n "$PYENV_VERSION" ]]; then
+    #   wget https://github.com/praekeltfoundation/travis-pyenv/releases/download/0.4.0/setup-pyenv.sh
+    #   source setup-pyenv.sh
+    # fi
 
-    export PYENV_ROOT='~/.travis-pyenv'
-    export PYENV_CACHE_PATH='~/.pyenv_cache'
+    pyenv install "2.7.13"
+    pyenv global "2.7.13"
 
-
-    if [[ -n "$PYENV_VERSION" ]]; then
-      wget https://github.com/praekeltfoundation/travis-pyenv/releases/download/0.4.0/setup-pyenv.sh
-      source setup-pyenv.sh
-    fi
+    pip install -U virtualenv
 
     python --version
 
