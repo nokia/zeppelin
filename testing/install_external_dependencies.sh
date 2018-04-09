@@ -70,19 +70,19 @@ if [[ -n "$PYTHON" ]] ; then
     export PYTHON_EXEC=$HOME/Python-2.7.9/python
   fi
 
-  if [[ "$PYTHON" == "3" ]] ; then
-    # Download python 3.4.3 and extract
-    cd $HOME
-    wget --quiet https://www.python.org/ftp/python/3.4.3/Python-3.4.3.tgz
-    tar -xf Python-3.4.3.tgz
-
-    # Install Python 3.4.3
-    cd $HOME/Python-3.4.3
-    ./configure --prefix=$HOME/Python-3.4.3 > /dev/null 2> /dev/null
-    make -j2 build_all > /dev/null 2> /dev/null
-
-    export PYTHON_EXEC=$HOME/Python-2.4.3/python
-  fi
+  # if [[ "$PYTHON" == "3" ]] ; then
+  #   # Download python 3.4.3 and extract
+  #   cd $HOME
+  #   wget --quiet https://www.python.org/ftp/python/3.4.3/Python-3.4.3.tgz
+  #   tar -xf Python-3.4.3.tgz
+  #
+  #   # Install Python 3.4.3
+  #   cd $HOME/Python-3.4.3
+  #   ./configure --prefix=$HOME/Python-3.4.3 > /dev/null 2> /dev/null
+  #   make -j2 build_all > /dev/null 2> /dev/null
+  #
+  #   export PYTHON_EXEC=$HOME/Python-2.4.3/python
+  # fi
 
   mkdir -p ${HOME}/zeppelin
   cd ${HOME}
