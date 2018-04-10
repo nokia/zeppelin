@@ -51,7 +51,7 @@ touch .environ
 # Install R dependencies if SPARKR is true
 if [[ "${SPARKR}" = "true" ]] ; then
   mkdir -p ~/R
-  echo 'R_LIBS_USER="~/R"' >>  $HOME/.environ
+  echo 'export R_LIBS_USER="~/R"' >>  $HOME/.environ
   R -e ".libPaths( c( .libPaths(), '~/R') ); install.packages(c('evaluate','base64enc','base64enc','knitr','ggplot2'), repos = 'http://cran.us.r-project.org', lib='~/R')"  > /dev/null 2>&1
 fi
 
@@ -70,6 +70,6 @@ if [[ -n "$PYTHON" ]] ; then
 
   pip install --quiet -U virtualenv
 
-  pip install --quiet setuptools grpcio bkzep python-Levenshtein==0.12.0 cython==0.26.1 numpy==1.13.1 pandas==0.20.3 matplotlib==2.0.2 py4j==0.10.6 scipy==0.19.1 ggplot==0.11.5 fuzzywuzzy==0.15.1
+  pip install --quiet setuptools grpcio bkzep ipython=5.4.1 jupyter_client ipykernel python-Levenshtein==0.12.0 cython==0.26.1 numpy==1.13.1 pandas==0.20.3 matplotlib==2.0.2 py4j==0.10.6 scipy==0.19.1 ggplot==0.11.5 fuzzywuzzy==0.15.1
 
 fi
