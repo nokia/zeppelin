@@ -52,7 +52,7 @@ touch .environ
 if [[ "${SPARKR}" = "true" ]] ; then
   R -e ".libPaths()"
   mkdir -p ~/R
-  R -e ".libPaths( c( .libPaths(), '~/R') )"
+  R -e ".libPaths( c( .libPaths(), '~/R') ); .libPaths()"
   R -e ".libPaths()"
   R -e "install.packages(c('evaluate','base64enc','base64enc','knitr','ggplot2'), repos = 'http://cran.us.r-project.org', lib='~/R')"  > /dev/null 2>&1
 fi
