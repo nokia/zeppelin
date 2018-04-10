@@ -50,9 +50,11 @@ touch .environ
 
 # Install R dependencies if SPARKR is true
 if [[ "${SPARKR}" = "true" ]] ; then
-  R CMD check
+  R -e ".libPaths()"
   mkdir -p ~/R
-  R -e "install.packages(c('evaluate','base64enc','base64enc','knitr','ggplot2'), repos = 'http://cran.us.r-project.org')"  > /dev/null 2>&1
+  R -e ".libPaths( c( .libPaths(), '~/R') )"
+  R -e ".libPaths()"
+  R -e "install.packages(c('evaluate','base64enc','base64enc','knitr','ggplot2'), repos = 'http://cran.us.r-project.org', lib='~/R')"  > /dev/null 2>&1
 fi
 
 if [[ -n "$PYTHON" ]] ; then
