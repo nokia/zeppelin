@@ -24,7 +24,7 @@ cache:
   directories:
     - ${HOME}/.m2
     - ${HOME}/R
-    - ${HOME}/.pyenv_cache
+    - /opt/pyenv/cache
     - ${HOME}/.cache/pip
 
 env:
