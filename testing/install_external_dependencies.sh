@@ -48,29 +48,27 @@ touch .environ
 #   pip install -q grpcio ggplot bkzep==0.4.0 python-Levenshtein==0.12.0
 # fi
 
+# Install R dependencies if SPARKR is true
+if [[ "${SPARKR}" = "true" ]] ; then
+  R CMD check
+  mkdir -p ~/R
+  R -e "install.packages(c('evaluate','base64enc','base64enc','knitr','ggplot2'), repos = 'http://cran.us.r-project.org')"  > /dev/null 2>&1
+fi
+
 if [[ -n "$PYTHON" ]] ; then
 
   if [[ "$PYTHON" == "2" ]] ; then
-
-    pyenv install "2.7.13"
-    pyenv global "2.7.13"
-
-    pip install --quiet -U virtualenv
-
-    python --version
-
+    export PYTHON_VERSION="2.7.13"
   fi
 
   if [[ "$PYTHON" == "3" ]] ; then
-
-    pyenv install "3.5.3"
-    pyenv global "3.5.3"
-
-    pip install --quiet -U virtualenv
-
-    python --version
-
+    export PYTHON_VERSION="3.5.3"
   fi
+
+  pyenv install $PYTHON_VERSION
+  pyenv global $PYTHON_VERSION
+
+  pip install --quiet -U virtualenv
 
   pip install --quiet setuptools grpcio bkzep python-Levenshtein==0.12.0 cython==0.26.1 numpy==1.13.1 pandas==0.20.3 matplotlib==2.0.2 py4j==0.10.6 scipy==0.19.1 ggplot==0.11.5 fuzzywuzzy==0.15.1
 
