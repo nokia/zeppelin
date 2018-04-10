@@ -27,6 +27,7 @@ cache:
     - ${HOME}/R
     - ${HOME}/.cache/pip
     - /opt/pyenv/versions
+    - zeppelin-web/node_modules
 
 env:
   global:
