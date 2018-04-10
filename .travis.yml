@@ -63,27 +63,22 @@ matrix:
         - TEST_MODULES="-pl zeppelin-web"
         - TEST_PROJECTS="-Pweb-e2e"
 
-    # Test core modules
-    # Several tests were excluded from this configuration due to the following issues:
-    # HeliumApplicationFactoryTest - https://issues.apache.org/jira/browse/ZEPPELIN-2470
-    # After issues are fixed these tests need to be included back by removing them from the "-Dtests.to.exclude" property
-    - jdk: "oraclejdk8"
-      apt:
-        sources:
-        - r-packages-trusty
-        packages:
-        - r-base-dev
-      env:
-        - DSC="Test core modules"
-        - BUILD_PLUGINS="true"
-        - PYTHON="3"
-        - SPARKR="true"
-        - PROFILE="-Pspark-2.2 -Pscalding -Phelium-dev -Pexamples -Pscala-2.11"
-        - BUILD_FLAG="install -Pbuild-distr -DskipRat"
-        - TEST_FLAG="verify -Pusing-packaged-distr -DskipRat"
-        - MODULES="-pl ${INTERPRETERS}"
-        - PYTHONWARNINGS="ignore"
-        - TEST_PROJECTS="-Dtests.to.exclude=**/SparkIntegrationTest.java,**/ZeppelinSparkClusterTest.java,**/org/apache/zeppelin/spark/*,**/HeliumApplicationFactoryTest.java -DfailIfNoTests=false"
+    # # Test core modules
+    # # Several tests were excluded from this configuration due to the following issues:
+    # # HeliumApplicationFactoryTest - https://issues.apache.org/jira/browse/ZEPPELIN-2470
+    # # After issues are fixed these tests need to be included back by removing them from the "-Dtests.to.exclude" property
+    # - jdk: "oraclejdk8"
+    #   env:
+    #     - DSC="Test core modules"
+    #     - BUILD_PLUGINS="true"
+    #     - PYTHON="3"
+    #     - SPARKR="true"
+    #     - PROFILE="-Pspark-2.2 -Pscalding -Phelium-dev -Pexamples -Pscala-2.11"
+    #     - BUILD_FLAG="install -Pbuild-distr -DskipRat"
+    #     - TEST_FLAG="verify -Pusing-packaged-distr -DskipRat"
+    #     - MODULES="-pl ${INTERPRETERS}"
+    #     - PYTHONWARNINGS="ignore"
+    #     - TEST_PROJECTS="-Dtests.to.exclude=**/SparkIntegrationTest.java,**/ZeppelinSparkClusterTest.java,**/org/apache/zeppelin/spark/*,**/HeliumApplicationFactoryTest.java -DfailIfNoTests=false"
 
 before_install:
   - echo $PYENV_CACHE_PATH
