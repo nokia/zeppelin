@@ -84,7 +84,7 @@ matrix:
         - TEST_FLAG="verify -Pusing-packaged-distr -DskipRat"
         - MODULES="-pl ${INTERPRETERS}"
         - PYTHONWARNINGS="ignore"
-        - TEST_PROJECTS="-Dtests.to.exclude=**/SparkIntegrationTest.java,**/ZeppelinSparkClusterTest.java,**/org/apache/zeppelin/spark/*,**/HeliumApplicationFactoryTest.java -DfailIfNoTests=false"
+        - TEST_PROJECTS="-Dtests.to.exclude=**/FileSystemRecoveryStorageTest.java -Dtests.to.exclude=**/SparkIntegrationTest.java,**/ZeppelinSparkClusterTest.java,**/org/apache/zeppelin/spark/*,**/HeliumApplicationFactoryTest.java -DfailIfNoTests=false"
 
 before_install:
   - mkdir -p /home/travis/tmp
