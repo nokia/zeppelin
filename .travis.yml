@@ -67,7 +67,8 @@ matrix:
         - TEST_MODULES="-pl zeppelin-web"
         - TEST_PROJECTS="-Pweb-e2e"
 
-    - jdk: "oraclejdk8"
+    - sudo: required
+      jdk: "oraclejdk8"
       addons:
         apt:
           sources:
