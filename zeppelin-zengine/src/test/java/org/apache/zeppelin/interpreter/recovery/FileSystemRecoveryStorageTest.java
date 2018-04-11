@@ -29,64 +29,64 @@ public class FileSystemRecoveryStorageTest extends AbstractInterpreterTest {
 
   @Before
   public void setUp() throws Exception {
-    // System.setProperty(ZeppelinConfiguration.ConfVars.ZEPPELIN_RECOVERY_STORAGE_CLASS.getVarName(),
-    //     FileSystemRecoveryStorage.class.getName());
-    // recoveryDir = Files.createTempDir();
-    // System.setProperty(ZeppelinConfiguration.ConfVars.ZEPPELIN_RECOVERY_DIR.getVarName(), recoveryDir.getAbsolutePath());
-    // super.setUp();
+    System.setProperty(ZeppelinConfiguration.ConfVars.ZEPPELIN_RECOVERY_STORAGE_CLASS.getVarName(),
+        FileSystemRecoveryStorage.class.getName());
+    recoveryDir = Files.createTempDir();
+    System.setProperty(ZeppelinConfiguration.ConfVars.ZEPPELIN_RECOVERY_DIR.getVarName(), recoveryDir.getAbsolutePath());
+    super.setUp();
   }
 
   @Override
   public void tearDown() throws Exception {
-    // super.tearDown();
-    // FileUtils.deleteDirectory(recoveryDir);
+    super.tearDown();
+    FileUtils.deleteDirectory(recoveryDir);
   }
 
   @Test
   public void testSingleInterpreterProcess() throws InterpreterException, IOException {
-    // InterpreterSetting interpreterSetting = interpreterSettingManager.getByName("test");
-    // interpreterSetting.getOption().setPerUser(InterpreterOption.SHARED);
-    //
-    // Interpreter interpreter1 = interpreterSetting.getDefaultInterpreter("user1", "note1");
-    // RemoteInterpreter remoteInterpreter1 = (RemoteInterpreter) interpreter1;
-    // InterpreterContext context1 = new InterpreterContext("noteId", "paragraphId", "repl",
-    //     "title", "text", AuthenticationInfo.ANONYMOUS, new HashMap<String, Object>(), new GUI(),
-    //     new GUI(), null, null, new ArrayList<InterpreterContextRunner>(), null);
-    // remoteInterpreter1.interpret("hello", context1);
-    //
-    // assertEquals(1, interpreterSettingManager.getRecoveryStorage().restore().size());
-    //
-    // interpreterSetting.close();
-    // assertEquals(0, interpreterSettingManager.getRecoveryStorage().restore().size());
+    InterpreterSetting interpreterSetting = interpreterSettingManager.getByName("test");
+    interpreterSetting.getOption().setPerUser(InterpreterOption.SHARED);
+
+    Interpreter interpreter1 = interpreterSetting.getDefaultInterpreter("user1", "note1");
+    RemoteInterpreter remoteInterpreter1 = (RemoteInterpreter) interpreter1;
+    InterpreterContext context1 = new InterpreterContext("noteId", "paragraphId", "repl",
+        "title", "text", AuthenticationInfo.ANONYMOUS, new HashMap<String, Object>(), new GUI(),
+        new GUI(), null, null, new ArrayList<InterpreterContextRunner>(), null);
+    remoteInterpreter1.interpret("hello", context1);
+
+    assertEquals(1, interpreterSettingManager.getRecoveryStorage().restore().size());
+
+    interpreterSetting.close();
+    assertEquals(0, interpreterSettingManager.getRecoveryStorage().restore().size());
   }
 
   @Test
   public void testMultipleInterpreterProcess() throws InterpreterException, IOException {
-    // InterpreterSetting interpreterSetting = interpreterSettingManager.getByName("test");
-    // interpreterSetting.getOption().setPerUser(InterpreterOption.ISOLATED);
-    //
-    // Interpreter interpreter1 = interpreterSetting.getDefaultInterpreter("user1", "note1");
-    // RemoteInterpreter remoteInterpreter1 = (RemoteInterpreter) interpreter1;
-    // InterpreterContext context1 = new InterpreterContext("noteId", "paragraphId", "repl",
-    //     "title", "text", AuthenticationInfo.ANONYMOUS, new HashMap<String, Object>(), new GUI(),
-    //     new GUI(), null, null, new ArrayList<InterpreterContextRunner>(), null);
-    // remoteInterpreter1.interpret("hello", context1);
-    // assertEquals(1, interpreterSettingManager.getRecoveryStorage().restore().size());
-    //
-    // Interpreter interpreter2 = interpreterSetting.getDefaultInterpreter("user2", "note2");
-    // RemoteInterpreter remoteInterpreter2 = (RemoteInterpreter) interpreter2;
-    // InterpreterContext context2 = new InterpreterContext("noteId", "paragraphId", "repl",
-    //     "title", "text", AuthenticationInfo.ANONYMOUS, new HashMap<String, Object>(), new GUI(),
-    //     new GUI(), null, null, new ArrayList<InterpreterContextRunner>(), null);
-    // remoteInterpreter2.interpret("hello", context2);
-    //
-    // assertEquals(2, interpreterSettingManager.getRecoveryStorage().restore().size());
-    //
-    // interpreterSettingManager.restart(interpreterSetting.getId(), "note1", "user1");
-    // assertEquals(1, interpreterSettingManager.getRecoveryStorage().restore().size());
-    //
-    // interpreterSetting.close();
-    // assertEquals(0, interpreterSettingManager.getRecoveryStorage().restore().size());
+    InterpreterSetting interpreterSetting = interpreterSettingManager.getByName("test");
+    interpreterSetting.getOption().setPerUser(InterpreterOption.ISOLATED);
+
+    Interpreter interpreter1 = interpreterSetting.getDefaultInterpreter("user1", "note1");
+    RemoteInterpreter remoteInterpreter1 = (RemoteInterpreter) interpreter1;
+    InterpreterContext context1 = new InterpreterContext("noteId", "paragraphId", "repl",
+        "title", "text", AuthenticationInfo.ANONYMOUS, new HashMap<String, Object>(), new GUI(),
+        new GUI(), null, null, new ArrayList<InterpreterContextRunner>(), null);
+    remoteInterpreter1.interpret("hello", context1);
+    assertEquals(1, interpreterSettingManager.getRecoveryStorage().restore().size());
+
+    Interpreter interpreter2 = interpreterSetting.getDefaultInterpreter("user2", "note2");
+    RemoteInterpreter remoteInterpreter2 = (RemoteInterpreter) interpreter2;
+    InterpreterContext context2 = new InterpreterContext("noteId", "paragraphId", "repl",
+        "title", "text", AuthenticationInfo.ANONYMOUS, new HashMap<String, Object>(), new GUI(),
+        new GUI(), null, null, new ArrayList<InterpreterContextRunner>(), null);
+    remoteInterpreter2.interpret("hello", context2);
+
+    assertEquals(2, interpreterSettingManager.getRecoveryStorage().restore().size());
+
+    interpreterSettingManager.restart(interpreterSetting.getId(), "note1", "user1");
+    assertEquals(1, interpreterSettingManager.getRecoveryStorage().restore().size());
+
+    interpreterSetting.close();
+    assertEquals(0, interpreterSettingManager.getRecoveryStorage().restore().size());
   }
 
 }
