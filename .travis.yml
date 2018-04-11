@@ -131,7 +131,7 @@ before_script:
 script:
   - if [[ -n $TEST_MODULES ]]; then export MODULES="${TEST_MODULES}"; fi
   - echo "mvn -T 1C $TEST_FLAG $MODULES $PROFILE -B $TEST_PROJECTS"
-  - travis_wait 30 mvn -T 1C $TEST_FLAG $MODULES $PROFILE -B $TEST_PROJECTS
+  - mvn -T 1C $TEST_FLAG $MODULES $PROFILE -B $TEST_PROJECTS
 
 after_failure:
   - find . -name rat.txt | xargs cat
