@@ -45,9 +45,9 @@ import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.amazonaws.util.json.JSONArray;
-import com.amazonaws.util.json.JSONException;
-import com.amazonaws.util.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -65,9 +65,9 @@ public class ZeppelinhubClient {
   private static final long CONNECTION_IDLE_TIME = TimeUnit.SECONDS.toMillis(30);
   private static ZeppelinhubClient instance = null;
   private static Gson gson;
-  
+
   private SchedulerService schedulerService;
-  private Map<String, ZeppelinhubSession> sessionMap = 
+  private Map<String, ZeppelinhubSession> sessionMap =
       new ConcurrentHashMap<String, ZeppelinhubSession>();
 
   public static ZeppelinhubClient initialize(String zeppelinhubUrl, String token) {
@@ -98,9 +98,9 @@ public class ZeppelinhubClient {
       LOG.error("Cannot connect to zeppelinhub via websocket", e);
     }
   }
-  
+
   public void initUser(String token) {
-    
+
   }
 
   public void stop() {
@@ -120,7 +120,7 @@ public class ZeppelinhubClient {
   public String getToken() {
     return this.zeppelinhubToken;
   }
-  
+
   public void send(String msg, String token) {
     ZeppelinhubSession zeppelinhubSession = getSession(token);
     if (!isConnectedToZeppelinhub(zeppelinhubSession)) {
@@ -133,7 +133,7 @@ public class ZeppelinhubClient {
     }
     zeppelinhubSession.sendByFuture(msg);
   }
-  
+
   private boolean isConnectedToZeppelinhub(ZeppelinhubSession zeppelinhubSession) {
     return (zeppelinhubSession != null && zeppelinhubSession.isSessionOpen());
   }
@@ -180,7 +180,7 @@ public class ZeppelinhubClient {
     request.setCookies(Lists.newArrayList(new HttpCookie(ZeppelinHubRepo.TOKEN_HEADER, token)));
     return request;
   }
-  
+
   private WebSocketClient createNewWebsocketClient() {
     SslContextFactory sslContextFactory = new SslContextFactory();
     WebSocketClient client = new WebSocketClient(sslContextFactory);
@@ -189,7 +189,7 @@ public class ZeppelinhubClient {
     client.setMaxIdleTimeout(CONNECTION_IDLE_TIME);
     return client;
   }
-  
+
   private void addRoutines() {
     schedulerService.add(ZeppelinHubHeartbeat.newInstance(this), 10, 23);
   }
@@ -269,7 +269,7 @@ public class ZeppelinhubClient {
           LOG.warn("Wrong \"paragraph\" format for RUN_NOTEBOOK");
           continue;
         }
-        zeppelinMsg.data = gson.fromJson(paragraphs.getString(i), 
+        zeppelinMsg.data = gson.fromJson(paragraphs.getString(i),
             new TypeToken<Map<String, Object>>(){}.getType());
         zeppelinMsg.principal = principal;
         zeppelinMsg.ticket = TicketContainer.instance.getTicket(principal);

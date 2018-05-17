@@ -36,6 +36,7 @@
 
     <!--library versions-->
     <commons.httpclient.version>4.3.6</commons.httpclient.version>
+    <jackson.version>2.5.4</jackson.version>
     <jersey.version>2.22.2</jersey.version>
     <quartz.scheduler.version>2.2.1</quartz.scheduler.version>
     <jersey.servlet.version>1.13</jersey.servlet.version>
@@ -92,6 +93,10 @@
         <exclusion>
           <groupId>com.fasterxml.jackson.core</groupId>
           <artifactId>jackson-databind</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.fasterxml.jackson.dataformat</groupId>
+          <artifactId>jackson-dataformat-cbor</artifactId>
         </exclusion>
         <exclusion>
           <groupId>com.sun.jersey</groupId>
@@ -194,7 +199,7 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-annotations</artifactId>
-      <version>2.5.4</version>
+      <version>${jackson.version}</version>
     </dependency>
 
     <dependency>
