@@ -36,10 +36,10 @@ You need to use a layer on top of Shiro to enable authentication/authorization f
   +-io.buji:buji-pac4j:3.0.0
   | +-org.apache.shiro:shiro-web:1.4.0
   |
-  +-org.pac4j:pac4j-core:3.0.0-SNAPSHOT
+  +-org.pac4j:pac4j-core:3.0.0
   | +-org.slf4j:slf4j-api:1.7.25
   |
-  +-org.pac4j:pac4j-oidc:3.0.0-SNAPSHOT
+  +-org.pac4j:pac4j-oidc:3.0.0
     +-com.nimbusds:nimbus-jose-jwt:4.34.2
     | +-com.github.stephenc.jcip:jcip-annotations:1.0-1
     | +-net.minidev:json-smart:1.3.1
@@ -58,7 +58,7 @@ You need to use a layer on top of Shiro to enable authentication/authorization f
     | +-org.apache.commons:commons-collections4:4.1
     | +-org.apache.commons:commons-lang3:3.5
     |
-    +-org.pac4j:pac4j-core:3.0.0-SNAPSHOT
+    +-org.pac4j:pac4j-core:3.0.0
       +-org.slf4j:slf4j-api:1.7.25
   ```
 
