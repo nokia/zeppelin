@@ -102,7 +102,7 @@ public class NotebookServer extends WebSocketServlet
   }
 
 
-  private static final Logger LOG = LoggerFactory.getLogger(NotebookServer.class);
+  static final Logger LOG = LoggerFactory.getLogger(NotebookServer.class);
   private static Gson gson = new GsonBuilder()
       .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
       .registerTypeAdapter(Date.class, new NotebookImportDeserializer())
@@ -490,7 +490,7 @@ public class NotebookServer extends WebSocketServlet
     }
   }
 
-  private void broadcastExcept(String noteId, Message m, NotebookSocket exclude) {
+  void broadcastExcept(String noteId, Message m, NotebookSocket exclude) {
     List<NotebookSocket> socketsToBroadcast = Collections.emptyList();
     synchronized (noteSocketMap) {
       broadcastToWatchers(noteId, StringUtils.EMPTY, m);
@@ -525,7 +525,7 @@ public class NotebookServer extends WebSocketServlet
     }
   }
 
-  private void unicast(Message m, NotebookSocket conn) {
+  void unicast(Message m, NotebookSocket conn) {
     try {
       conn.send(serializeMessage(m));
     } catch (IOException e) {
@@ -1271,13 +1271,7 @@ public class NotebookServer extends WebSocketServlet
 
     note.persist(subject);
 
-    if (note.isPersonalizedMode()) {
-      Map<String, Paragraph> userParagraphMap =
-          note.getParagraph(paragraphId).getUserParagraphMap();
-      broadcastParagraphs(userParagraphMap, p);
-    } else {
-      broadcastParagraph(note, p);
-    }
+    new ParagraphBroadcaster(this).broadcast(note, p, conn);
   }
 
   private void cloneNote(NotebookSocket conn, HashSet<String> userAndRoles, Notebook notebook,
